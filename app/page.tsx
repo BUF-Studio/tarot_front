@@ -1,113 +1,180 @@
+'use client';
+import styles from "./landing.module.scss";
+import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
+import Marquee from "react-fast-marquee";
 import Image from "next/image";
+import LinearProgress from "@mui/material/LinearProgress";
+import Button from "@mui/material/Button";
+import { useSpring, animated } from "@react-spring/web";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+
+const picturePathData = [
+  "/balance.png",
+  "/candle.png",
+  "/eye.png",
+  "/hand.png",
+  "/hour.png",
+  "/logo.png",
+  "/moon.png",
+  "/snake.png",
+  "/sun.png",
+  "/sword.png",
+  "/tree.png",
+  "/wine.png",
+];
 
 export default function Home() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const inertia = 2;
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX / inertia, y: e.clientY / inertia });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  const username = "Kwan Yang";
+
+  const plan = [
+    {
+      plan: "Free Plan",
+      desc: "Perfect for beginners exploring the world of tarot",
+      price: "RM 0 / month",
+      features: [
+        "1 free reading per week",
+        "Access basic card history",
+        "Daily card of the day",
+        "Limited chat history",
+      ],
+      btnText: "Start Free",
+    },
+    {
+      plan: "Standard Plan",
+      desc: "For enthusiasts seeking deeper insights",
+      price: "RM 19 / month",
+      features: [
+        "10 AI-powered readings per month",
+        "Full access to card interpretation",
+        "Personalized weekly horoscope",
+        "Priority WhatsApp support",
+      ],
+      btnText: "Choose Standard",
+    },
+    {
+      plan: "Pro Plan",
+      desc: "For serious tarot practitioners and professionals",
+      price: "RM 39 / month",
+      features: [
+        "Unlimited AI-powered readings",
+        "Advanced card interpretation",
+        "Custom spread analysis",
+        "Monthly live group reading session",
+      ],
+      btnText: "Go Pro",
+    },
+  ];
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
+    <>
+      <div className={styles.main}>
+        <section className={styles.welcomeSection}>
+          <Marquee>
+            {picturePathData.map((path, index) => (
+              <PictureCard key={index} path={path} mousePos={mousePos} />
+            ))}
+          </Marquee>
+          <h1 className={`display-large`}>Welcome {username}!</h1>
+          <p className={styles.contactInfo}>
+            <span className="title-large">
+              <BsMailbox2 size={24} className={styles.icon} />
+              kwanyang@gmail.com
+            </span>
+            <span className="title-large">
+              <BsFillTelephoneFill size={24} className={styles.icon} />
+              6014 1234 3243
+            </span>
+          </p>
+          <div className={styles.planInfo}>
+            <div className={styles.planDetails}>
+              <span className={`${styles.plan} headline-large`}>Free Plan</span>
+              <span className="body-large">Tarotmate subscription plan</span>
+            </div>
+            <div className={styles.progressBar}>
+              <div className={styles.textRow}>
+                <span className="title-large">Reading Left</span>
+                <span className="title-small">1/2</span>
+              </div>
+              <LinearProgress variant="determinate" value={0.5} />
+              <Button variant="contained" className={styles.button}>
+                Upgrade Plan
+              </Button>
+            </div>
+          </div>
+          <Button variant="text" className={styles.logout}>
+            <Link
+              href="/signin"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              Logout
+            </Link>
+          </Button>
+        </section>
+      </div>
+
+      <section className={styles.tarotMateSection}>
+        <h2 className={`${styles.tarotMateTitle} display-large`}>TarotMate</h2>
+        <p className={`${styles.tarotMateSubtitle} headline-medium`}>
+          Your personal AI-Powered Tarot Reading Companion
         </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+        <div className={styles.plansContainer}>
+          {plan.map((plan, index) => (
+            <div key={index} className={styles.planCard}>
+              <h3 className={`${styles.planTitle} title-large`}>{plan.plan}</h3>
+              <h4 className={`${styles.planDesc} title-medium`}>{plan.desc}</h4>
+              <ul className={styles.planFeatures}>
+                {plan.features.map((feature, index) => (
+                  <li key={index} className="body-large">
+                    ✨ {feature}
+                  </li>
+                ))}
+              </ul>
+              <p className={`${styles.planPrice} headline-small`}>
+                {plan.price}
+              </p>
+              <Button variant="contained" className={styles.planButton}>
+                {plan.btnText}
+              </Button>
+            </div>
+          ))}
         </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      </section>
+    </>
   );
 }
+const PictureCard = ({ path, mousePos }) => {
+  const calcTransform = (x, y) => [
+    (x / window.innerWidth - 0.5) * 30,
+    (y / window.innerHeight - 0.5) * 30,
+  ];
+
+  const springProps = useSpring({
+    transform: `perspective(600px) rotateX(${
+      calcTransform(mousePos.x, mousePos.y)[1]
+    }deg) rotateY(${calcTransform(mousePos.x, mousePos.y)[0]}deg)`,
+    config: { mass: 5, tension: 350, friction: 40 },
+  });
+
+  return (
+    <div className={styles.pictureCard}>
+      <animated.div style={springProps}>
+        <Image src={path} alt={path} width={320} height={320} />
+      </animated.div>
+    </div>
+  );
+};

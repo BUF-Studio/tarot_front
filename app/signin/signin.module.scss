@@ -1,0 +1,71 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--color-background);
+
+  .loginForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: var(--color-surface-container-lowest);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    min-width: 58.5rem;
+
+    .loginLogo {
+      grid-column: 1 / 2;
+      grid-row: 1;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    .loginHeader {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .form {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+
+      .input {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .forgotEmail {
+      display: block;
+      text-align: left;
+      color: var(--color-secondary);
+      text-decoration: underline;
+      margin-bottom: 2rem;
+      opacity: 0.8;
+      width: fit-content;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .button {
+    border-radius: 100px;
+    text-transform: capitalize;
+    margin-left: 1.5rem;
+    box-shadow: none;
+  }
+
+  .login {
+color: var(--color-on-primary);
+  }
+}

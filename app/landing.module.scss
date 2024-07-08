@@ -1,0 +1,194 @@
+.main {
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  background-image: url("../public/background.png");
+  background-repeat: repeat;
+  background-size: 32rem;
+  align-items: center;
+
+  .welcomeSection {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    min-width: 70.5rem;
+    text-align: center;
+    align-items: center;
+
+    .contactInfo {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: row;
+      margin-top: 1rem;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        display: flex;
+        align-items: center;
+
+        .icon {
+          margin-right: 0.5rem;
+        }
+
+        &:last-child {
+          margin-left: 5.5rem;
+        }
+      }
+    }
+
+    .planInfo {
+      margin-top: 2.5rem;
+      align-self: center;
+      min-width: 49.5rem;
+      background-color: var(--color-surface-container);
+      padding: 3.5rem;
+      border-radius: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .planDetails {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .plan {
+          font-weight: 700;
+        }
+      }
+
+      .progressBar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        .textRow {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 1rem;
+        }
+
+        .button {
+          margin-top: 1rem;
+          align-self: flex-end;
+          border-radius: 100px;
+          box-shadow: none;
+          text-transform: capitalize;
+        }
+      }
+    }
+
+    .logout {
+      margin-top: 1rem;
+      text-transform: capitalize;
+      text-decoration: none;
+      border-radius: 100px;
+      opacity: 0.8;
+
+      Link{
+        text-decoration: none;
+        color: var(--color-primary);
+      }
+    }
+  }
+}
+
+.tarotMateSection {
+  background-color: var(--color-on-primary-container);
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .tarotMateTitle {
+    color: var(--color-surface);
+  }
+
+  .tarotMateSubtitle {
+    color: var(--color-surface);
+    margin-top: 1.5rem;
+  }
+}
+
+.plansContainer {
+  margin-top: 5.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 49.5rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background-color: var(--color-secondary-container);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .planCard {
+    background-color: var(--color-surface-container-lowest);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s cubic-bezier(0.3, 0, 0.8, 0.15);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s cubic-bezier(0.05, 0.7, 0.1, 1);
+    }
+
+    .planTitle {
+      margin-top: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .planDesc {
+      margin-bottom: 1.5rem;
+    }
+
+    .planFeatures {
+      flex: 1;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      list-style: none;
+
+      li {
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .planPrice {
+      font-weight: bold;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+
+    .planButton {
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      border-radius: 200px;
+      width: fit-content;
+      align-self: center;
+      box-shadow: none;
+      text-transform: capitalize;
+    }
+  }
+}
+
+.pictureCard {
+  height: 20rem;
+  width: 20rem;
+  margin-bottom: 2rem;
+  background-color: var(--color-background);
+  perspective: 1000px; // Enable 3D perspective
+  overflow: hidden;
+
+  .animated {
+    will-change: transform;
+    transition: transform 0.1s;
+  }
+}

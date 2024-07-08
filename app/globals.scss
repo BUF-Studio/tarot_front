@@ -1,0 +1,13 @@
+@import "lib/light.css";
+@import "lib/typography.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  color: var(--color-on-background);
+  background-color: var(--color-background);
+}
