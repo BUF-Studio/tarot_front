@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import styles from "./landing.module.scss";
 import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
 import Marquee from "react-fast-marquee";
@@ -29,8 +29,8 @@ export default function Home() {
   const inertia = 2;
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX / inertia, y: e.clientY / inertia });
+    const handleMouseMove = (e: MousePosition) => {
+      setMousePos({ x: e.x / inertia, y: e.y / inertia });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -89,26 +89,28 @@ export default function Home() {
               <PictureCard key={index} path={path} mousePos={mousePos} />
             ))}
           </Marquee>
-          <h1 className={`display-large`}>Welcome {username}!</h1>
-          <p className={styles.contactInfo}>
-            <span className="title-large">
+          <h1 className={`display-medium`}>Welcome {username}!</h1>
+          <div className={styles.contactInfo}>
+            <span className="title-medium">
               <BsMailbox2 size={24} className={styles.icon} />
               kwanyang@gmail.com
             </span>
-            <span className="title-large">
+            <span className="title-medium">
               <BsFillTelephoneFill size={24} className={styles.icon} />
               6014 1234 3243
             </span>
-          </p>
+          </div>
           <div className={styles.planInfo}>
             <div className={styles.planDetails}>
-              <span className={`${styles.plan} headline-large`}>Free Plan</span>
+              <span className={`${styles.plan} headline-medium`}>
+                Free Plan
+              </span>
               <span className="body-large">Tarotmate subscription plan</span>
             </div>
             <div className={styles.progressBar}>
               <div className={styles.textRow}>
-                <span className="title-large">Reading Left</span>
-                <span className="title-small">1/2</span>
+                <span className="title-medium">Reading Left</span>
+                <span className="title-medium">1/2</span>
               </div>
               <LinearProgress variant="determinate" value={0.5} />
               <Button variant="contained" className={styles.button}>
@@ -128,8 +130,8 @@ export default function Home() {
       </div>
 
       <section className={styles.tarotMateSection}>
-        <h2 className={`${styles.tarotMateTitle} display-large`}>TarotMate</h2>
-        <p className={`${styles.tarotMateSubtitle} headline-medium`}>
+        <h2 className={`${styles.tarotMateTitle} display-medium`}>TarotMate</h2>
+        <p className={`${styles.tarotMateSubtitle} title-medium`}>
           Your personal AI-Powered Tarot Reading Companion
         </p>
         <div className={styles.plansContainer}>
@@ -157,14 +159,25 @@ export default function Home() {
     </>
   );
 }
-const PictureCard = ({ path, mousePos }) => {
-  const calcTransform = (x, y) => [
+
+type MousePosition = {
+  x: number;
+  y: number;
+};
+
+interface PictureCardProps {
+  path: string;
+  mousePos: MousePosition;
+}
+
+const PictureCard: React.FC<PictureCardProps> = ({ path, mousePos }) => {
+  const calcTransform = (x: number, y: number): [number, number] => [
     (x / window.innerWidth - 0.5) * 30,
     (y / window.innerHeight - 0.5) * 30,
   ];
 
   const springProps = useSpring({
-    transform: `perspective(600px) rotateX(${
+    transform: `perspective(300px) rotateX(${
       calcTransform(mousePos.x, mousePos.y)[1]
     }deg) rotateY(${calcTransform(mousePos.x, mousePos.y)[0]}deg)`,
     config: { mass: 5, tension: 350, friction: 40 },
@@ -173,7 +186,12 @@ const PictureCard = ({ path, mousePos }) => {
   return (
     <div className={styles.pictureCard}>
       <animated.div style={springProps}>
-        <Image src={path} alt={path} width={320} height={320} />
+        <Image
+          src={path}
+          alt={path}
+          width={window.innerHeight * 0.3}
+          height={window.innerHeight * 0.3}
+        />
       </animated.div>
     </div>
   );
