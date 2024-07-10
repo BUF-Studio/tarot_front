@@ -9,38 +9,35 @@ const SignIn = () => {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginForm}>
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          width={64}
-          height={64}
-          className={styles.loginLogo}
-        />
         <div className={styles.loginHeader}>
-          <h1
-            className="headline-large"
-            style={{ fontWeight: "700", marginBottom: "1rem" }}
-          >
-            Sign In
-          </h1>
-          <p className="body-large">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={64}
+            height={64}
+            className={styles.loginLogo}
+          />
+          <h1 className={`headline-large ${styles.title}`}>Sign In</h1>
+          <p className={`body-large ${styles.subtitle}`}>
             By signing in, you agree to our terms and conditions
           </p>
         </div>
         <form className={styles.form}>
           <TextField
-            id="outlined-basic"
+            id="email"
             label="Email"
             variant="outlined"
             type="email"
             className={styles.input}
+            fullWidth
           />
           <TextField
-            id="outlined-basic"
+            id="password"
             label="Password"
             variant="outlined"
             type="password"
             className={styles.input}
+            fullWidth
           />
           <Link
             href="/forgot-email"
@@ -59,11 +56,7 @@ const SignIn = () => {
               className={`${styles.button} ${styles.login}`}
               type="submit"
             >
-              <Link
-                href="/"
-                className={`$ ${styles.login}`}
-                style={{ textDecoration: "none" }}
-              >
+              <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
                 Sign In
               </Link>
             </Button>
