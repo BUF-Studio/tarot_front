@@ -5,10 +5,10 @@
   background-repeat: repeat;
   background-size: 32rem;
   align-items: center;
-  padding: 2rem 1rem;
+  padding: 2rem 0;
 
   @media (min-width: 768px) {
-    padding: 4rem 2rem;
+    padding: 4rem 0;
   }
 
   .welcomeSection {
@@ -19,6 +19,7 @@
     align-items: center;
 
     .contactInfo {
+      padding: 0 1rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -49,73 +50,80 @@
         }
       }
     }
-
-    .planInfo {
-      margin-top: 2.5rem;
-      width: 100%;
-      background-color: var(--color-surface-container);
-      padding: 1.5rem;
-      border-radius: 24px;
+    .planInfoContainer {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      width: 90%;
 
-      @media (min-width: 768px) {
-        width: 90%;
-        padding: 2.5rem;
-        flex-direction: row;
-      }
-
-      .planDetails {
-        flex: 1;
+      .planInfo {
+        margin-top: 2.5rem;
+        width: 100%;
+        background-color: var(--color-surface-container);
+        padding: 1.5rem;
+        border-radius: 24px;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        margin-bottom: 1rem;
 
         @media (min-width: 768px) {
-          align-items: flex-start;
-          margin-bottom: 0;
+          width: 100%;
+          max-width: 49.5rem;
+          padding: 2.5rem;
+          flex-direction: row;
         }
 
-        .plan {
-          font-weight: 700;
-        }
-
-        span {
-          text-align: center;
+        .planDetails {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-bottom: 1rem;
 
           @media (min-width: 768px) {
-            text-align: left;
+            align-items: flex-start;
+            margin-bottom: 0;
+          }
+
+          .plan {
+            font-weight: 700;
+          }
+
+          span {
+            text-align: center;
+
+            @media (min-width: 768px) {
+              text-align: left;
+            }
           }
         }
-      }
 
-      .progressBar {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-
-        @media (min-width: 768px) {
-          margin-left: 2rem;
-        }
-
-        .textRow {
+        .progressBar {
+          flex: 1;
           display: flex;
-          justify-content: space-between;
-          align-items: baseline;
-          margin-bottom: 1rem;
-        }
-
-        .button {
-          margin-top: 1rem;
-          align-self: center;
-          border-radius: 100px;
-          box-shadow: none;
-          text-transform: capitalize;
+          flex-direction: column;
+          justify-content: center;
 
           @media (min-width: 768px) {
-            align-self: flex-end;
+            margin-left: 2rem;
+          }
+
+          .textRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+          }
+
+          .button {
+            margin-top: 1rem;
+            align-self: center;
+            border-radius: 100px;
+            box-shadow: none;
+            text-transform: capitalize;
+
+            @media (min-width: 768px) {
+              align-self: flex-end;
+            }
           }
         }
       }
@@ -242,5 +250,41 @@
   .animated {
     will-change: transform;
     transition: transform 0.1s;
+  }
+}
+
+.modalContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-surface-container);
+  width: 90%;
+  max-width: 30rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+
+  .buttonGroup{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1rem;
+    
+    .planButton {
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      border-radius: 200px;
+      width: fit-content;
+      align-self: center;
+      box-shadow: none;
+      text-transform: capitalize;
+    }
   }
 }

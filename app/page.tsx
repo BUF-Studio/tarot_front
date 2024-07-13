@@ -1,13 +1,17 @@
 "use client";
-import styles from "./landing.module.scss";
+import { useSpring, animated } from "@react-spring/web";
+import { useState, useEffect } from "react";
 import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
+import { MdUpgrade } from "react-icons/md";
+
+import styles from "./landing.module.scss";
 import Marquee from "react-fast-marquee";
 import Image from "next/image";
 import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
-import { useSpring, animated } from "@react-spring/web";
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
 const picturePathData = [
   "/balance.png",
@@ -25,6 +29,10 @@ const picturePathData = [
 ];
 
 export default function Home() {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
 
@@ -82,6 +90,26 @@ export default function Home() {
 
   return (
     <>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className={styles.modalContainer}>
+          <MdUpgrade size={48} />
+          <span className="headline-medium">Upgrade Plan</span>
+          <span className="body-large">Choose a plan that suits you best</span>
+          <div className={styles.buttonGroup}>
+            <Button variant="contained" className={styles.planButton}>
+              Standard Plan
+            </Button>
+            <Button variant="contained" className={styles.planButton}>
+              Pro Plan
+            </Button>
+          </div>
+        </Box>
+      </Modal>
       <div className={styles.main}>
         <section className={styles.welcomeSection}>
           <Marquee>
@@ -100,24 +128,32 @@ export default function Home() {
               6014 1234 3243
             </span>
           </div>
-          <div className={styles.planInfo}>
-            <div className={styles.planDetails}>
-              <span className={`${styles.plan} headline-medium`}>
-                Free Plan
-              </span>
-              <span className="body-large">Tarotmate subscription plan</span>
-            </div>
-            <div className={styles.progressBar}>
-              <div className={styles.textRow}>
-                <span className="title-medium">Reading Left</span>
-                <span className="title-medium">1/2</span>
+
+          <div className={styles.planInfoContainer}>
+            <div className={styles.planInfo}>
+              <div className={styles.planDetails}>
+                <span className={`${styles.plan} headline-medium`}>
+                  Free Plan
+                </span>
+                <span className="body-large">Tarotmate subscription plan</span>
               </div>
-              <LinearProgress variant="determinate" value={0.5} />
-              <Button variant="contained" className={styles.button}>
-                Upgrade Plan
-              </Button>
+              <div className={styles.progressBar}>
+                <div className={styles.textRow}>
+                  <span className="title-medium">Reading Left</span>
+                  <span className="title-medium">1/2</span>
+                </div>
+                <LinearProgress variant="determinate" value={0.5} />
+                <Button
+                  variant="contained"
+                  className={styles.button}
+                  onClick={handleOpen}
+                >
+                  Upgrade Plan
+                </Button>
+              </div>
             </div>
           </div>
+
           <Button variant="text" className={styles.logout}>
             <Link
               href="/signin"

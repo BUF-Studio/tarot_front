@@ -1,11 +1,39 @@
-import React from "react";
+"use client";
+
+import React, { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+
 import styles from "./signin.module.scss";
 import Image from "next/image";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
 
 const SignIn = () => {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Handle sign-in logic here
+    console.log("Form submitted");
+    router.push("/");
+  };
+
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginForm}>
@@ -22,7 +50,7 @@ const SignIn = () => {
             By signing in, you agree to our terms and conditions
           </p>
         </div>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
             id="email"
             label="Email"
@@ -31,14 +59,26 @@ const SignIn = () => {
             className={styles.input}
             fullWidth
           />
-          <TextField
-            id="password"
-            label="Password"
-            variant="outlined"
-            type="password"
-            className={styles.input}
-            fullWidth
-          />
+          <FormControl variant="outlined">
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <OutlinedInput
+              id="password"
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
           <Link
             href="/forgot-email"
             className={`${styles.forgotEmail} body-large`}
@@ -56,9 +96,9 @@ const SignIn = () => {
               className={`${styles.button} ${styles.login}`}
               type="submit"
             >
-              <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
-                Sign In
-              </Link>
+              {/* <Link href="/" style={{ textDecoration: "none", color: "inherit" }}> */}
+              Sign In
+              {/* </Link> */}
             </Button>
           </div>
         </form>
