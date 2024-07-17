@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React, { type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
@@ -14,9 +14,11 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
+import { handleSignIn } from "../lib/aws/cognito";
 
 const SignIn = () => {
   const router = useRouter();
+
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -27,11 +29,11 @@ const SignIn = () => {
     event.preventDefault();
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (formData: FormData) => {
     // Handle sign-in logic here
+    await handleSignIn(formData)
     console.log("Form submitted");
-    router.push("/");
+    // router.push("/");
   };
 
   return (
@@ -50,10 +52,11 @@ const SignIn = () => {
             By signing in, you agree to our terms and conditions
           </p>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} action={handleSubmit}>
           <TextField
             id="email"
             label="Email"
+            name="email"
             variant="outlined"
             type="email"
             className={styles.input}
@@ -63,6 +66,7 @@ const SignIn = () => {
             <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
               id="password"
+              name="password"
               type={showPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">

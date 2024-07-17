@@ -16,6 +16,8 @@ const ConfirmSignUp = () => {
   const { email } = auth;
   const [verificationCode, setVerificationCode] = useState("");
 
+  console.log(`Email registered:${email}`);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (verificationCode.length !== 6) {

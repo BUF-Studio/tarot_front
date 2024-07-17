@@ -12,6 +12,9 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { handleSignOut } from "./lib/aws/cognito";
+import { useAuthUser } from "./_hooks/use-auth-user";
+import { useRouter } from "next/navigation";
 
 const picturePathData = [
   "/balance.png",
@@ -32,6 +35,8 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const router = useRouter();
+
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
@@ -87,6 +92,11 @@ export default function Home() {
       btnText: "Go Pro",
     },
   ];
+
+  const handleUserSignOut = async () => {
+    await handleSignOut();
+    router.push("/signin");
+  }
 
   return (
     <>
@@ -154,13 +164,8 @@ export default function Home() {
             </div>
           </div>
 
-          <Button variant="text" className={styles.logout}>
-            <Link
-              href="/signin"
-              style={{ textDecoration: "none", color: "black" }}
-            >
+          <Button variant="text" className={styles.logout} onClick={handleUserSignOut}>
               Logout
-            </Link>
           </Button>
         </section>
       </div>

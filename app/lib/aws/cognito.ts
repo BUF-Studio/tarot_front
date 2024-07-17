@@ -24,6 +24,7 @@ export async function handleSignUp(formData: FormData) {
     console.log("User ID", userId);
     console.log("Is sign up complete", isSignUpComplete);
     console.log("Next step", nextStep);
+    console.log("Password:", String(formData.get("password")));
   } catch (error) {
     console.error("Error signing up user", error);
     // Handle error (e.g., show error message to the user)
@@ -76,12 +77,14 @@ export async function handleSignIn(
       username: String(formData.get("email")),
       password: String(formData.get("password")),
     });
+    console.log(`Email: ${String(formData.get("email"))}`)
     if (nextStep === 'CONFIRM_SIGN_UP') {
       await resendSignUpCode({
         username: String(formData.get("email")),
       });
       redirectPath = "/confirm-signup";
     }
+    console.log("Is signed in", isSignedIn);
     redirect(redirectPath);
   } catch (error) {
     console.error("Error signing in", error);
@@ -92,8 +95,9 @@ export async function handleSignIn(
 
 export async function handleSignOut() {
   try {
-    await signOut();
-    redirect("/signin");
+    signOut();
+    console.log("User signed out");
+    // redirect("/signin");
   } catch (error) {
     console.error("Error signing out", error);
     // Handle error (e.g., show error message to the user)

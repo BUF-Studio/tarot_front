@@ -65,7 +65,6 @@ const SignUp = () => {
     auth.setEmail(rawFormData.email as string);
     console.log(`email: ${rawFormData.email}`);
     router.push("/confirm-signup");
-    
   };
 
   return (
