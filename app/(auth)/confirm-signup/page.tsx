@@ -55,11 +55,11 @@ const ConfirmSignUp = () => {
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className="flex justify-between mb-5">
           <TextField
-            id="name"
-            label="Name"
-            name="name"
+            id="code"
+            label="Code"
+            name="code"
             variant="outlined"
-            placeholder="Johnny Depp"
+            placeholder="123456"
             onChange={(event) =>
               setVerificationCode(event.target.value)
             }

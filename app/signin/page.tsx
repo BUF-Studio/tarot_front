@@ -33,7 +33,7 @@ const SignIn = () => {
     // Handle sign-in logic here
     await handleSignIn(formData)
     console.log("Form submitted");
-    // router.push("/");
+    router.push("/");
   };
 
   return (

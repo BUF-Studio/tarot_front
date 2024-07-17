@@ -85,7 +85,6 @@ export async function handleSignIn(
       redirectPath = "/confirm-signup";
     }
     console.log("Is signed in", isSignedIn);
-    redirect(redirectPath);
   } catch (error) {
     console.error("Error signing in", error);
     // Handle error (e.g., show error message to the user)
