@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import React, { FormEvent } from "react";
+import React, { type FormEvent } from "react";
 
 import styles from "./signup.module.scss";
 import Image from "next/image";
@@ -12,8 +12,17 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
+import { handleSignUp } from "@/app/lib/aws/cognito";
 
-const SignUp = () => {
+const SignUp = ({
+  searchParams,
+}: {
+  searchParams?: {
+    email?: string;
+    name?: string;
+    phone?: string;
+  };
+}) => {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -27,7 +36,6 @@ const SignUp = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle sign-in logic here
     console.log("Form submitted");
     router.push("/");
   };

@@ -1,22 +1,36 @@
 "use client";
 
-import React, { FormEvent } from "react";
-import styles from "./signup.module.scss";
+import React, { type FormEvent, useCallback, useState, useRef } from "react";
+import styles from "./confirmSignUp.module.scss";
 import Image from "next/image";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter} from "next/navigation";
+import { handleConfirmSignUp} from "../../lib/aws/cognito";
+import { useAuth } from "@/app/lib/context/AuthProvider";
 
-const SignUp = () => {
+const ConfirmSignUp = () => {
   const router = useRouter();
+  const auth = useAuth();
+  const { email } = auth;
+  const [verificationCode, setVerificationCode] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle sign-in logic here
-    console.log("Form submitted create accoutn2");
-    router.push("/create-account2");
+    if (verificationCode.length !== 6) {
+      console.log("Verification code must be 6 digits");
+      return;
+    }
+
+    try {
+      await handleConfirmSignUp(email, verificationCode);
+      router.push('/signin');
+    } catch (error) {
+      console.log(`Error: ${error}`)
+    }
   };
+
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginForm}>
@@ -28,34 +42,28 @@ const SignUp = () => {
             height={64}
             className={styles.loginLogo}
           />
-          <h1 className={`headline-large ${styles.title}`}>Create Account</h1>
+          <h1 className={`headline-large ${styles.title}`}>
+            Verify Your Email
+          </h1>
           <p className={`body-large ${styles.subtitle}`}>
-            Tell a bit about yourself
+            Enter the six digit code we sent to your email address to verify
+            your new TarotMate account
           </p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <TextField
-            id="email"
-            label="Email"
-            variant="outlined"
-            type="email"
-            placeholder="johhnydepp@tarotmate.com"
-            className={styles.input}
-          />
+          <div className="flex justify-between mb-5">
           <TextField
             id="name"
             label="Name"
+            name="name"
             variant="outlined"
             placeholder="Johnny Depp"
+            onChange={(event) =>
+              setVerificationCode(event.target.value)
+            }
             className={styles.input}
           />
-          <TextField
-            id="phone"
-            label="Phone"
-            variant="outlined"
-            placeholder="60123456789"
-            className={styles.input}
-          />
+          </div>
           <div className={styles.buttonGroup}>
             <Button variant="text" className={styles.button}>
               <Link href="/signin" style={{ textDecoration: "none" }}>
@@ -67,13 +75,7 @@ const SignUp = () => {
               className={`${styles.button} ${styles.login}`}
               type="submit"
             >
-              {/* <Link
-                href="/create-account2"
-                className={`$ ${styles.login}`}
-                style={{ textDecoration: "none" }}
-              > */}
               Next
-              {/* </Link> */}
             </Button>
           </div>
         </form>
@@ -82,4 +84,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ConfirmSignUp;
