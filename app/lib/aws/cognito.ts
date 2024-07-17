@@ -6,7 +6,18 @@ import {
   signOut,
   resendSignUpCode,
   autoSignIn,
+  getCurrentUser,
 } from "aws-amplify/auth";
+
+export async function handleGetCurrentUser() {
+  try {
+    const user = await getCurrentUser();
+    return user;
+  }
+  catch (error) {
+    console.error("Error getting current user", error);
+  }
+}
 
 export async function handleSignUp(formData: FormData) {
   try {
