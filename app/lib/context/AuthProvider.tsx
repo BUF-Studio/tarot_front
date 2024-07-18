@@ -3,21 +3,31 @@
 import React, { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
-interface AuthContextType {
+interface UnregisteredUser {
   email: string;
-  setEmail: (email: string) => void;
+  name: string;
+  phone: string;
+}
+
+interface AuthContextType {
+  unregisteredUser: UnregisteredUser;
+  setUnregisteredUser: (user: UnregisteredUser) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [email, setEmail] = useState("");
+  const [unregisteredUser, setUnregisteredUser] = useState<UnregisteredUser>({
+    email: "",
+    name: "",
+    phone: "",
+  });
 
   return (
     <AuthContext.Provider
       value={{
-        email,
-        setEmail,
+        unregisteredUser,
+        setUnregisteredUser,
       }}
     >
       {children}

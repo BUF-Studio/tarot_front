@@ -13,10 +13,8 @@ import { useAuth } from "@/app/lib/context/AuthProvider";
 const ConfirmSignUp = () => {
   const router = useRouter();
   const auth = useAuth();
-  const { email } = auth;
+  const { unregisteredUser } = auth;
   const [verificationCode, setVerificationCode] = useState("");
-
-  console.log(`Email registered:${email}`);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,7 +24,7 @@ const ConfirmSignUp = () => {
     }
 
     try {
-      await handleConfirmSignUp(email, verificationCode);
+      await handleConfirmSignUp(unregisteredUser.email, verificationCode);
       router.push('/signin');
     } catch (error) {
       console.log(`Error: ${error}`)

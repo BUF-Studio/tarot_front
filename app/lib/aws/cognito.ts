@@ -13,21 +13,26 @@ export async function handleGetCurrentUser() {
   try {
     const user = await getCurrentUser();
     return user;
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error getting current user", error);
   }
 }
 
-export async function handleSignUp(formData: FormData) {
+export async function handleSignUp(
+  email: string,
+  phone_number: string,
+  preferred_username: string,
+  password: string
+) {
   try {
     const { isSignUpComplete, userId, nextStep } = await signUp({
-      username: String(formData.get("email")),
-      password: String(formData.get("password")),
+      username: email,
+      password: password,
       options: {
         userAttributes: {
-          email: String(formData.get("email")),
-          phone_number: String(formData.get("phone")),
+          email,
+          phone_number,
+          preferred_username,
         },
         autoSignIn: true,
       },
@@ -35,12 +40,9 @@ export async function handleSignUp(formData: FormData) {
     console.log("User ID", userId);
     console.log("Is sign up complete", isSignUpComplete);
     console.log("Next step", nextStep);
-    console.log("Password:", String(formData.get("password")));
   } catch (error) {
     console.error("Error signing up user", error);
-    // Handle error (e.g., show error message to the user)
   }
-  // redirect("/confirm-signup");
 }
 
 export async function handleConfirmSignUp(
@@ -50,13 +52,14 @@ export async function handleConfirmSignUp(
   try {
     if (!email) {
       throw new Error("Email not found. Please sign up again.");
-
     }
     const { isSignUpComplete, nextStep } = await confirmSignUp({
       username: email,
       confirmationCode: verificationCode,
     });
-    console.log(`Is sign up complete: ${isSignUpComplete} Next step: ${nextStep}`);
+    console.log(
+      `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep}`
+    );
     autoSignIn();
   } catch (error) {
     console.error("Error confirming sign up", error);
@@ -72,24 +75,26 @@ export async function handleSendEmailVerificationCode(
     await resendSignUpCode({
       username: String(formData.get("email")),
     });
-    return { ...prevState, message: "Verification code sent", errorMessage: "" };
+    return {
+      ...prevState,
+      message: "Verification code sent",
+      errorMessage: "",
+    };
   } catch (error) {
     console.error("Error sending email verification code", error);
     return { ...prevState, errorMessage: error };
   }
 }
 
-export async function handleSignIn(
-  formData: FormData
-) {
+export async function handleSignIn(formData: FormData) {
   let redirectPath = "/";
   try {
     const { isSignedIn, nextStep } = await signIn({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
     });
-    console.log(`Email: ${String(formData.get("email"))}`)
-    if (nextStep === 'CONFIRM_SIGN_UP') {
+    console.log(`Email: ${String(formData.get("email"))}`);
+    if (nextStep === "CONFIRM_SIGN_UP") {
       await resendSignUpCode({
         username: String(formData.get("email")),
       });

@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import React, { type FormEvent } from "react";
+import React, { useEffect, useState, type FormEvent } from "react";
 
 import styles from "./signup.module.scss";
 import Image from "next/image";
@@ -12,19 +12,26 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
+import { Check, Close } from "@mui/icons-material";
+import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { handleSignUp } from "@/app/lib/aws/cognito";
+import { useAuth } from "@/app/lib/context/AuthProvider";
 
-const SignUp = ({
-  searchParams,
-}: {
-  searchParams?: {
-    email?: string;
-    name?: string;
-    phone?: string;
-  };
-}) => {
+const SignUp = () => {
   const router = useRouter();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const { unregisteredUser } = useAuth();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validations, setValidations] = useState({
+    length: false,
+    number: false,
+    special: false,
+    uppercase: false,
+    lowercase: false,
+    match: false,
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -34,11 +41,51 @@ const SignUp = ({
     event.preventDefault();
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("Form submitted");
-    router.push("/");
+  const validatePassword = () => {
+    setValidations({
+      length: password.length >= 8,
+      number: /\d/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      match: password === confirmPassword && password !== "",
+    });
   };
+
+  useEffect(() => {
+    validatePassword();
+  }, [password, confirmPassword]);
+
+  const allValid = Object.values(validations).every(Boolean);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("Checking done");
+    if (allValid) {
+      await handleSignUp(
+        unregisteredUser.email,
+        unregisteredUser.phone,
+        unregisteredUser.name,
+        password
+      );
+      console.log("Form submitted");
+      router.push("/confirm-signup");
+    } else {
+      console.log("Form not submitted");
+    }
+  };
+
+  const ValidationItem = ({ valid, text }) => (
+    <ListItem>
+      <ListItemIcon>
+        {valid ? <Check color="success" /> : <Close color="error" />}
+      </ListItemIcon>
+      <ListItemText
+        primary={text}
+        primaryTypographyProps={{ color: valid ? "success" : "error" }}
+      />
+    </ListItem>
+  );
 
   return (
     <div className={styles.loginContainer}>
@@ -63,6 +110,9 @@ const SignUp = ({
             <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
               id="password"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
               type={showPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
@@ -83,6 +133,9 @@ const SignUp = ({
             <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
             <OutlinedInput
               id="confirmPassword"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setConfirmPassword(e.target.value)
+              }
               type={showPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
@@ -99,6 +152,29 @@ const SignUp = ({
               label="Confirm Password"
             />
           </FormControl>
+          <List sx={{ mt: 2 }}>
+            <ValidationItem
+              valid={validations.length}
+              text="Minimum length - 8 characters"
+            />
+            <ValidationItem
+              valid={validations.number}
+              text="Contains at least 1 number"
+            />
+            <ValidationItem
+              valid={validations.special}
+              text="Contains at least 1 special character"
+            />
+            <ValidationItem
+              valid={validations.uppercase}
+              text="Contains at least 1 uppercase letter"
+            />
+            <ValidationItem
+              valid={validations.lowercase}
+              text="Contains at least 1 lowercase letter"
+            />
+            <ValidationItem valid={validations.match} text="Passwords match" />
+          </List>
 
           <div className={styles.buttonGroup}>
             <Button variant="text" className={styles.button}>
@@ -111,13 +187,7 @@ const SignUp = ({
               className={`${styles.button} ${styles.login}`}
               type="submit"
             >
-              <Link
-                href="/"
-                className={`$ ${styles.login}`}
-                style={{ textDecoration: "none" }}
-              >
-                Create Account
-              </Link>
+              Create Account
             </Button>
           </div>
         </form>
