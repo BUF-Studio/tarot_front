@@ -1,8 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import React, { useEffect, useState, type FormEvent } from "react";
-
+import React, { useEffect, useState } from "react";
 import styles from "./signup.module.scss";
 import Image from "next/image";
 import Button from "@mui/material/Button";
@@ -13,7 +12,14 @@ import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import { Check, Close } from "@mui/icons-material";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Alert,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Snackbar,
+} from "@mui/material";
 import { handleSignUp } from "@/app/lib/aws/cognito";
 import { useAuth } from "@/app/lib/context/AuthProvider";
 
@@ -22,6 +28,7 @@ const SignUp = () => {
   const { unregisteredUser } = useAuth();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [validations, setValidations] = useState({
     length: false,
     number: false,
@@ -30,8 +37,21 @@ const SignUp = () => {
     lowercase: false,
     match: false,
   });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "error" | "success",
+  });
 
-  const [showPassword, setShowPassword] = useState(false);
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -41,7 +61,7 @@ const SignUp = () => {
     event.preventDefault();
   };
 
-  const validatePassword = () => {
+  const validatePassword = React.useCallback(() => {
     setValidations({
       length: password.length >= 8,
       number: /\d/.test(password),
@@ -50,45 +70,79 @@ const SignUp = () => {
       lowercase: /[a-z]/.test(password),
       match: password === confirmPassword && password !== "",
     });
-  };
+  }, [password, confirmPassword]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     validatePassword();
-  }, [password, confirmPassword]);
+  }, [password, confirmPassword, validatePassword]);
 
   const allValid = Object.values(validations).every(Boolean);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Checking done");
-    if (allValid) {
-      await handleSignUp(
+    if (!allValid) {
+      setSnackbar({
+        open: true,
+        message: "Please fix the errors before submitting",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      const { success, message } = await handleSignUp(
         unregisteredUser.email,
-        unregisteredUser.phone,
+        `+60${unregisteredUser.phone}`,
         unregisteredUser.name,
         password
       );
-      console.log("Form submitted");
-      router.push("/confirm-signup");
-    } else {
-      console.log("Form not submitted");
+      if (success) {
+        setSnackbar({ open: true, message: message, severity: "success" });
+        router.push("/confirm-signup");
+      } else {
+        setSnackbar({ open: true, message, severity: "error" });
+      }
+    } catch (error) {
+      console.log(`Error: ${error}`);
     }
   };
 
-  const ValidationItem = ({ valid, text }) => (
+  interface ValidationItemProps {
+    valid: boolean;
+    text: string;
+  }
+
+  const ValidationItem: React.FC<ValidationItemProps> = ({ valid, text }) => (
     <ListItem>
       <ListItemIcon>
         {valid ? <Check color="success" /> : <Close color="error" />}
       </ListItemIcon>
       <ListItemText
         primary={text}
-        primaryTypographyProps={{ color: valid ? "success" : "error" }}
+        primaryTypographyProps={{
+          color: valid ? "success.main" : "error.main",
+        }}
       />
     </ListItem>
   );
 
   return (
     <div className={styles.loginContainer}>
+      <Snackbar
+        open={snackbar.open}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
           <Image
@@ -99,14 +153,14 @@ const SignUp = () => {
             className={styles.loginLogo}
           />
           <h1 className={`headline-large ${styles.title}`}>
-            Acount Credentials
+            Account Credentials
           </h1>
           <p className={`body-large ${styles.subtitle}`}>
             By signing up, you agree to our terms and conditions
           </p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <FormControl variant="outlined">
+          <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
               id="password"
@@ -129,7 +183,7 @@ const SignUp = () => {
               label="Password"
             />
           </FormControl>
-          <FormControl variant="outlined">
+          <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
             <OutlinedInput
               id="confirmPassword"
@@ -175,7 +229,6 @@ const SignUp = () => {
             />
             <ValidationItem valid={validations.match} text="Passwords match" />
           </List>
-
           <div className={styles.buttonGroup}>
             <Button variant="text" className={styles.button}>
               <Link href="/create-account1" style={{ textDecoration: "none" }}>
@@ -186,6 +239,7 @@ const SignUp = () => {
               variant="contained"
               className={`${styles.button} ${styles.login}`}
               type="submit"
+              disabled={!allValid}
             >
               Create Account
             </Button>

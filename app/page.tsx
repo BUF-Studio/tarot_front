@@ -36,7 +36,7 @@ export default function Home() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const router = useRouter();
-
+  const user = useAuthUser();
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
@@ -127,15 +127,15 @@ export default function Home() {
               <PictureCard key={index} path={path} mousePos={mousePos} />
             ))}
           </Marquee>
-          <h1 className={`display-medium`}>Welcome {username}!</h1>
+          <h1 className={`display-medium`}>Welcome {user?.preferred_username}!</h1>
           <div className={styles.contactInfo}>
             <span className="title-medium">
               <BsMailbox2 size={24} className={styles.icon} />
-              kwanyang@gmail.com
+              {user?.email}
             </span>
             <span className="title-medium">
               <BsFillTelephoneFill size={24} className={styles.icon} />
-              6014 1234 3243
+              {user?.phone_number}
             </span>
           </div>
 

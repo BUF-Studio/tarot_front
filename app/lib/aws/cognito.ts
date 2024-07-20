@@ -8,6 +8,8 @@ import {
   autoSignIn,
   getCurrentUser,
 } from "aws-amplify/auth";
+import { getErrorMessage } from "@/app/_utils/get-error-message";
+import { NextRouter } from "next/router";
 
 export async function handleGetCurrentUser() {
   try {
@@ -40,8 +42,13 @@ export async function handleSignUp(
     console.log("User ID", userId);
     console.log("Is sign up complete", isSignUpComplete);
     console.log("Next step", nextStep);
+    return { success: true, message: "Sign up successful" };
   } catch (error) {
     console.error("Error signing up user", error);
+    return {
+      success: false,
+      message: getErrorMessage(error) || "An error occurred during sign up",
+    };
   }
 }
 
@@ -61,20 +68,27 @@ export async function handleConfirmSignUp(
       `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep}`
     );
     autoSignIn();
+    return { success: true, message: "Verification successful" };
   } catch (error) {
     console.error("Error confirming sign up", error);
     // Handle error (e.g., show error message to the user)
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) || "An error occurred during email verification",
+    };
   }
 }
 
 export async function handleSendEmailVerificationCode(
   prevState: { message: string; errorMessage: string },
-  formData: FormData
+  email: string
 ) {
   try {
     await resendSignUpCode({
-      username: String(formData.get("email")),
+      username: email,
     });
+    console.log("Verification code sent");
     return {
       ...prevState,
       message: "Verification code sent",
@@ -82,29 +96,28 @@ export async function handleSendEmailVerificationCode(
     };
   } catch (error) {
     console.error("Error sending email verification code", error);
-    return { ...prevState, errorMessage: error };
+    return { ...prevState, errorMessage: error as string };
   }
 }
 
 export async function handleSignIn(formData: FormData) {
-  let redirectPath = "/";
   try {
+    console.log(`Email: ${String(formData.get("email"))}`);
+    console.log(`Password: ${String(formData.get("password"))}`);
     const { isSignedIn, nextStep } = await signIn({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
     });
-    console.log(`Email: ${String(formData.get("email"))}`);
     if (nextStep === "CONFIRM_SIGN_UP") {
-      await resendSignUpCode({
-        username: String(formData.get("email")),
-      });
-      redirectPath = "/confirm-signup";
+      return { success: false, message: "Please verify your email address" };
     }
-    console.log("Is signed in", isSignedIn);
+    return { success: true, message: "Sign in successful" };
   } catch (error) {
     console.error("Error signing in", error);
-    // Handle error (e.g., show error message to the user)
-    redirect("/signin");
+    return {
+      success: false,
+      message: getErrorMessage(error) || "An error occurred during sign in",
+    };
   }
 }
 

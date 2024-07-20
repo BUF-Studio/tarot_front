@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type FormEvent } from "react";
+import React, { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
@@ -19,11 +19,28 @@ import {
   handleSignIn,
   handleSignOut,
 } from "../lib/aws/cognito";
+import { Alert, Snackbar } from "@mui/material";
 
 const SignIn = () => {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "error" | "success",
+  });
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -35,24 +52,47 @@ const SignIn = () => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      if (handleGetCurrentUser != null) {
-        handleSignOut;
-        console.log("User is signed in");
+      const { success, message } = await handleSignIn(formData);
+      if (success) {
+        setSnackbar({
+          open: true,
+          message: message,
+          severity: "success",
+        });
         router.push("/");
       } else {
-        await handleSignIn(formData);
-        console.log("Form submitted");
-        router.push("/");
+        setSnackbar({
+          open: true,
+          message: message,
+          severity: "error",
+        });
       }
     } catch (error) {
-      await handleSignOut;
-      await handleSignIn(formData);
-      router.push("/");
+      console.error("Error signing in", error);
+      setSnackbar({
+        open: true,
+        message: "An error occurred during sign in",
+        severity: "error",
+      });
     }
   };
 
   return (
     <div className={styles.loginContainer}>
+      <Snackbar
+        open={snackbar.open}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
           <Image

@@ -20,10 +20,7 @@ export function useAuthUser() {
         const user = {
             ...(await getCurrentUser()),
             ...(await fetchUserAttributes()),
-            isAdmin: false,
         };
-        const groups = session.tokens.accessToken.payload["cognito:groups"];
-        user.isAdmin = Array.isArray(groups) && groups.includes("Admin");
         setUser(user);
       } catch (error) {
         console.error("Error fetching authenticated user", error);
