@@ -69,7 +69,7 @@ const ConfirmSignUp = () => {
       const {success, message} = await handleConfirmSignUp(unregisteredUser.email, verificationCode);
       if (success) {
         setSnackbar({ open: true, message, severity: "success" });
-        router.push("/signin");
+        router.push("/");
       } else {
         setSnackbar({ open: true, message, severity: "error" });
       }
