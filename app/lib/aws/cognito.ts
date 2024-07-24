@@ -69,7 +69,7 @@ export async function handleConfirmSignUp(
     console.log(
       `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep}`
     );
-    autoSignIn();
+    await autoSignIn();
     return { success: true, message: "Verification successful" };
   } catch (error) {
     console.error("Error confirming sign up", error);
