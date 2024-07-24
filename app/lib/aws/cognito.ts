@@ -110,7 +110,7 @@ export async function handleSignIn(formData: FormData) {
       username: String(formData.get("email")),
       password: String(formData.get("password")),
     });
-    if (nextStep === "CONFIRM_SIGN_UP") {
+    if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
       return { success: false, message: "Please verify your email address" };
     }
     return { success: true, message: "Sign in successful" };
