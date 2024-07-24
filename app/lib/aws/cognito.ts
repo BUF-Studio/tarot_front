@@ -7,6 +7,8 @@ import {
   resendSignUpCode,
   autoSignIn,
   getCurrentUser,
+  confirmResetPassword,
+  resetPassword,
 } from "aws-amplify/auth";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { NextRouter } from "next/router";
@@ -129,5 +131,42 @@ export async function handleSignOut() {
   } catch (error) {
     console.error("Error signing out", error);
     // Handle error (e.g., show error message to the user)
+  }
+}
+
+export async function handleResetPassword(
+  email: string
+) {
+  try {
+    await resetPassword({ username: email });
+    return { success: true, message: "A verification code has been send to your email address." };
+  } catch (error) {
+    console.error("Error resetting password", error);
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) || "An error occurred during email verification",
+    };
+  }
+}
+
+export async function handleConfirmResetPassword(
+  username: string,
+  confirmationCode: string,
+  newPassword: string
+) {
+  try {
+    await confirmResetPassword({
+      username,
+      confirmationCode,
+      newPassword,
+    });
+    return { success: true, message: "Password reset successful" };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) || "An error occurred during email verification",
+    };
   }
 }

@@ -16,10 +16,6 @@ import { Alert } from "@mui/material";
 const SignUp = () => {
   const auth = useAuth();
   const router = useRouter();
-  const [validations, setValidations] = useState({
-    email: "",
-    phone: "",
-  });
   const [errors, setErrors] = useState({
     email: "",
     phone: "",

@@ -3,7 +3,6 @@
 import React, { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-
 import styles from "./signin.module.scss";
 import Image from "next/image";
 import Button from "@mui/material/Button";
@@ -139,10 +138,10 @@ const SignIn = () => {
             />
           </FormControl>
           <Link
-            href="/forgot-email"
+            href="/forgot-password"
             className={`${styles.forgotEmail} body-large`}
           >
-            Forgot email?
+            Forgot password?
           </Link>
           <div className={styles.buttonGroup}>
             <Button variant="text" className={styles.button}>
@@ -155,9 +154,7 @@ const SignIn = () => {
               className={`${styles.button} ${styles.login}`}
               type="submit"
             >
-              {/* <Link href="/" style={{ textDecoration: "none", color: "inherit" }}> */}
               Sign In
-              {/* </Link> */}
             </Button>
           </div>
         </form>
