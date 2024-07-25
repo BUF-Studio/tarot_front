@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import ThemeRegistry from "./components/ThemeRegistry";
+import ConfigureAmplifyClientSide from "./amplify-cognito-config";
+import "./lib/font.css"
 
 export const metadata: Metadata = {
   title: "Tarotmate",
@@ -16,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ConfigureAmplifyClientSide />
         <ThemeRegistry>
           <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
         </ThemeRegistry>

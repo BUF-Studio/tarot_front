@@ -12,6 +12,10 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { handleSignOut } from "./lib/aws/cognito";
+import { useAuthUser } from "./_hooks/use-auth-user";
+import { useRouter } from "next/navigation";
+import { toTitleCase } from "./_utils/text-formatter";
 
 const picturePathData = [
   "/balance.png",
@@ -32,6 +36,8 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const router = useRouter();
+  const user = useAuthUser();
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
@@ -88,6 +94,11 @@ export default function Home() {
     },
   ];
 
+  const handleUserSignOut = async () => {
+    await handleSignOut();
+    router.push("/signin");
+  };
+
   return (
     <>
       <Modal
@@ -117,15 +128,17 @@ export default function Home() {
               <PictureCard key={index} path={path} mousePos={mousePos} />
             ))}
           </Marquee>
-          <h1 className={`display-medium`}>Welcome {username}!</h1>
+          <h1 className={`display-medium`}>
+            Welcome {toTitleCase(user?.preferred_username)}!
+          </h1>
           <div className={styles.contactInfo}>
             <span className="title-medium">
               <BsMailbox2 size={24} className={styles.icon} />
-              kwanyang@gmail.com
+              {user?.email}
             </span>
             <span className="title-medium">
               <BsFillTelephoneFill size={24} className={styles.icon} />
-              6014 1234 3243
+              {user?.phone_number}
             </span>
           </div>
 
@@ -154,13 +167,12 @@ export default function Home() {
             </div>
           </div>
 
-          <Button variant="text" className={styles.logout}>
-            <Link
-              href="/signin"
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              Logout
-            </Link>
+          <Button
+            variant="text"
+            className={styles.logout}
+            onClick={handleUserSignOut}
+          >
+            Logout
           </Button>
         </section>
       </div>
