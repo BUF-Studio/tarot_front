@@ -66,7 +66,10 @@ const ConfirmSignUp = () => {
     }
 
     try {
-      const {success, message} = await handleConfirmSignUp(unregisteredUser.email, verificationCode);
+      const { success, message } = await handleConfirmSignUp(
+        unregisteredUser.email,
+        verificationCode
+      );
       if (success) {
         setSnackbar({ open: true, message, severity: "success" });
         router.push("/");
@@ -129,22 +132,21 @@ const ConfirmSignUp = () => {
           </p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <div className="flex justify-between mb-5">
-            <TextField
-              id="code"
-              label="Code"
-              name="code"
-              variant="outlined"
-              placeholder="123456"
-              onChange={handleCodeChange}
-              className={styles.input}
-            />
-          </div>
+          <TextField
+            id="code"
+            label="Code"
+            name="code"
+            variant="outlined"
+            placeholder="123456"
+            onChange={handleCodeChange}
+            className={styles.input}
+          />
           <div className={styles.buttonGroup}>
             <Button
               variant="outlined"
               onClick={handleResendCode}
               disabled={isResendDisabled}
+              className={`${styles.button} `}
             >
               {isResendDisabled ? `Resend in ${resendTimer}s` : "Resend Code"}
             </Button>
@@ -153,7 +155,7 @@ const ConfirmSignUp = () => {
               className={`${styles.button} ${styles.login}`}
               type="submit"
             >
-              Next
+              Verify
             </Button>
           </div>
         </form>

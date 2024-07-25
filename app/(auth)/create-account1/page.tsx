@@ -19,6 +19,7 @@ const SignUp = () => {
   const [errors, setErrors] = useState({
     email: "",
     phone: "",
+    username: "",
   });
 
   const { unregisteredUser, setUnregisteredUser } = auth;
@@ -71,6 +72,19 @@ const SignUp = () => {
       phone: error,
     }));
   };
+
+  const handleUsernameBlur = () => {
+    let error = "";
+    if (unregisteredUser.name === "") {
+      error = "Username is required";
+    } else {
+      error = "";
+    }
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      username: error,
+    }));
+  }
 
   const handleCloseSnackbar = (
     event?: React.SyntheticEvent | Event,
@@ -145,6 +159,9 @@ const SignUp = () => {
             variant="outlined"
             placeholder="Johnny Depp"
             onChange={handleInputChange}
+            onBlur={handleUsernameBlur}
+            error={!!errors.username}
+            helperText={errors.username}
             className={styles.input}
           />
           <TextField
@@ -153,7 +170,7 @@ const SignUp = () => {
             name="phone"
             value={unregisteredUser.phone}
             variant="outlined"
-            placeholder="123456789"
+            placeholder="101112222"
             onChange={handleInputChange}
             className={styles.input}
             InputProps={{

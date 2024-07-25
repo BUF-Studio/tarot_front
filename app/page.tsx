@@ -15,6 +15,7 @@ import Modal from "@mui/material/Modal";
 import { handleSignOut } from "./lib/aws/cognito";
 import { useAuthUser } from "./_hooks/use-auth-user";
 import { useRouter } from "next/navigation";
+import { toTitleCase } from "./_utils/text-formatter";
 
 const picturePathData = [
   "/balance.png",
@@ -96,7 +97,7 @@ export default function Home() {
   const handleUserSignOut = async () => {
     await handleSignOut();
     router.push("/signin");
-  }
+  };
 
   return (
     <>
@@ -127,7 +128,9 @@ export default function Home() {
               <PictureCard key={index} path={path} mousePos={mousePos} />
             ))}
           </Marquee>
-          <h1 className={`display-medium`}>Welcome {user?.preferred_username}!</h1>
+          <h1 className={`display-medium`}>
+            Welcome {toTitleCase(user?.preferred_username)}!
+          </h1>
           <div className={styles.contactInfo}>
             <span className="title-medium">
               <BsMailbox2 size={24} className={styles.icon} />
@@ -164,8 +167,12 @@ export default function Home() {
             </div>
           </div>
 
-          <Button variant="text" className={styles.logout} onClick={handleUserSignOut}>
-              Logout
+          <Button
+            variant="text"
+            className={styles.logout}
+            onClick={handleUserSignOut}
+          >
+            Logout
           </Button>
         </section>
       </div>
