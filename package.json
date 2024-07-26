@@ -17,13 +17,17 @@
     "@mui/material": "^5.16.4",
     "@mui/material-nextjs": "^5.15.11",
     "@react-spring/web": "^9.7.3",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.1.0",
+    "anchor-pki": "^0.3.2",
     "aws-amplify": "^6.4.0",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
     "react-fast-marquee": "^1.6.5",
     "react-icons": "^5.2.1",
-    "sass": "^1.77.6"
+    "sass": "^1.77.6",
+    "stripe": "^16.4.0"
   },
   "devDependencies": {
     "@types/node": "^20",

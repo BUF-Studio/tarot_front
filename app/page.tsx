@@ -3,19 +3,18 @@ import { useSpring, animated } from "@react-spring/web";
 import { useState, useEffect } from "react";
 import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
 import { MdUpgrade } from "react-icons/md";
+import { handleSignOut } from "./lib/aws/cognito";
+import { useAuthUser } from "./_hooks/use-auth-user";
+import { useRouter } from "next/navigation";
+import { toTitleCase } from "./_utils/text-formatter";
 
 import styles from "./landing.module.scss";
 import Marquee from "react-fast-marquee";
 import Image from "next/image";
 import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
-import Link from "next/link";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import { handleSignOut } from "./lib/aws/cognito";
-import { useAuthUser } from "./_hooks/use-auth-user";
-import { useRouter } from "next/navigation";
-import { toTitleCase } from "./_utils/text-formatter";
 
 const picturePathData = [
   "/balance.png",
@@ -53,8 +52,6 @@ export default function Home() {
     };
   }, []);
 
-  const username = "Kwan Yang";
-
   const plan = [
     {
       plan: "Free Plan",
@@ -67,6 +64,7 @@ export default function Home() {
         "Limited chat history",
       ],
       btnText: "Start Free",
+      btnAction: () => navigateToPayment("free"),
     },
     {
       plan: "Standard Plan",
@@ -79,6 +77,7 @@ export default function Home() {
         "Priority WhatsApp support",
       ],
       btnText: "Choose Standard",
+      btnAction: () => navigateToPayment("standard"),
     },
     {
       plan: "Pro Plan",
@@ -91,12 +90,17 @@ export default function Home() {
         "Monthly live group reading session",
       ],
       btnText: "Go Pro",
+      btnAction: () => navigateToPayment("pro"),
     },
   ];
 
   const handleUserSignOut = async () => {
     await handleSignOut();
     router.push("/signin");
+  };
+
+  const navigateToPayment = (plan: string) => {
+    router.push(`/payment?plan=${plan}`);
   };
 
   return (
@@ -112,10 +116,18 @@ export default function Home() {
           <span className="headline-medium">Upgrade Plan</span>
           <span className="body-large">Choose a plan that suits you best</span>
           <div className={styles.buttonGroup}>
-            <Button variant="contained" className={styles.planButton}>
+            <Button
+              variant="outlined"
+              className={styles.planButton}
+              onClick={() => navigateToPayment("standard")}
+            >
               Standard Plan
             </Button>
-            <Button variant="contained" className={styles.planButton}>
+            <Button
+              variant="contained"
+              className={styles.planButton}
+              onClick={() => navigateToPayment("pro")}
+            >
               Pro Plan
             </Button>
           </div>
@@ -141,7 +153,6 @@ export default function Home() {
               {user?.phone_number}
             </span>
           </div>
-
           <div className={styles.planInfoContainer}>
             <div className={styles.planInfo}>
               <div className={styles.planDetails}>
@@ -166,7 +177,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
           <Button
             variant="text"
             className={styles.logout}
@@ -197,7 +207,11 @@ export default function Home() {
               <p className={`${styles.planPrice} headline-small`}>
                 {plan.price}
               </p>
-              <Button variant="contained" className={styles.planButton}>
+              <Button
+                variant="contained"
+                className={styles.planButton}
+                onClick={plan.btnAction}
+              >
                 {plan.btnText}
               </Button>
             </div>
