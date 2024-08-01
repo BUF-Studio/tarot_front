@@ -11,7 +11,6 @@ import {
   resetPassword,
 } from "aws-amplify/auth";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
-import { NextRouter } from "next/router";
 
 export async function handleGetCurrentUser() {
   try {
@@ -41,15 +40,20 @@ export async function handleSignUp(
         autoSignIn: true,
       },
     });
-    console.log("User ID", userId);
     console.log("Is sign up complete", isSignUpComplete);
     console.log("Next step", nextStep);
-    return { success: true, message: "Sign up successful" };
+    return { message: "Sign up successful", userId};
   } catch (error) {
-    console.error("Error signing up user", error);
+    if (getErrorMessage(error) === "User already exists") {
+      return {
+        message: "Email already exists. Please sign in instead.",
+        verification: true,
+      };
+    }
+
     return {
-      success: false,
       message: getErrorMessage(error) || "An error occurred during sign up",
+      verification: false,
     };
   }
 }
@@ -62,16 +66,30 @@ export async function handleConfirmSignUp(
     if (!email) {
       throw new Error("Email not found. Please sign up again.");
     }
-    const { isSignUpComplete, nextStep } = await confirmSignUp({
+    const { isSignUpComplete, nextStep, userId } = await confirmSignUp({
       username: email,
       confirmationCode: verificationCode,
     });
     console.log(
-      `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep}`
+      `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep} User: ${userId}`
     );
     await autoSignIn();
-    return { success: true, message: "Verification successful" };
+    return {
+      success: true,
+      message: "Verification successful",
+      userId: userId,
+    };
   } catch (error) {
+    if (
+      getErrorMessage(error) ===
+      "User cannot be confirmed. Current status is CONFIRMED"
+    ) {
+      return {
+        success: true,
+        message: "User has been VERIFIED",
+      };
+    }
+
     console.error("Error confirming sign up", error);
     // Handle error (e.g., show error message to the user)
     return {
@@ -134,12 +152,13 @@ export async function handleSignOut() {
   }
 }
 
-export async function handleResetPassword(
-  email: string
-) {
+export async function handleResetPassword(email: string) {
   try {
     await resetPassword({ username: email });
-    return { success: true, message: "A verification code has been send to your email address." };
+    return {
+      success: true,
+      message: "A verification code has been send to your email address.",
+    };
   } catch (error) {
     console.error("Error resetting password", error);
     return {

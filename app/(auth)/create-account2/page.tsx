@@ -22,10 +22,11 @@ import {
 } from "@mui/material";
 import { handleSignUp } from "@/app/lib/aws/cognito";
 import { useAuth } from "@/app/lib/context/AuthProvider";
+import { getErrorMessage } from "@/app/_utils/get-error-message";
 
 const SignUp = () => {
   const router = useRouter();
-  const { unregisteredUser } = useAuth();
+  const { unregisteredUser, setUnregisteredUser } = useAuth();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +44,12 @@ const SignUp = () => {
     message: "",
     severity: "success" as "error" | "success",
   });
+
+  useEffect(() => {
+    if (!unregisteredUser?.email) {
+      router.push("/create-account1"); // Redirect to sign-in page if unregisteredUser.email is not present
+    }
+  }, [unregisteredUser, router]);
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -83,7 +90,7 @@ const SignUp = () => {
 
   const allValid = Object.values(validations).every(Boolean);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!allValid) {
       setSnackbar({
@@ -93,22 +100,38 @@ const SignUp = () => {
       });
       return;
     }
-
+  
     try {
-      const { success, message } = await handleSignUp(
+      const { message, verification, userId } = await handleSignUp(
         unregisteredUser.email,
         `+60${unregisteredUser.phone}`,
         unregisteredUser.name,
         password
       );
-      if (success) {
+  
+      if (userId) {
+        setUnregisteredUser({
+          ...unregisteredUser,
+          id: userId,
+        });
         setSnackbar({ open: true, message: message, severity: "success" });
         router.push("/confirm-signup");
-      } else {
-        setSnackbar({ open: true, message, severity: "error" });
+        return;
       }
+  
+      if (verification) {
+        setSnackbar({ open: true, message: message, severity: "success" });
+        router.push("/signin");
+        return;
+      }
+  
+      setSnackbar({ open: true, message, severity: "error" });
     } catch (error) {
-      console.log(`Error: ${error}`);
+      setSnackbar({
+        open: true,
+        message: getErrorMessage(error),
+        severity: "error",
+      });
     }
   };
 

@@ -13,6 +13,8 @@ import {
 } from "../../lib/aws/cognito";
 import { useAuth } from "@/app/lib/context/AuthProvider";
 import { Alert, Snackbar } from "@mui/material";
+import { createUser } from "@/app/lib/api";
+import { getErrorMessage } from "@/app/_utils/get-error-message";
 
 const ConfirmSignUp = () => {
   const router = useRouter();
@@ -49,6 +51,12 @@ const ConfirmSignUp = () => {
     return () => clearInterval(interval);
   }, [resendTimer]);
 
+  useEffect(() => {
+    if (!unregisteredUser?.email) {
+      router.push("/signin"); // Redirect to sign-in page if unregisteredUser.email is not present
+    }
+  }, [unregisteredUser, router]);
+
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.replace(/\D/g, "").slice(0, 6);
     setVerificationCode(input);
@@ -72,12 +80,19 @@ const ConfirmSignUp = () => {
       );
       if (success) {
         setSnackbar({ open: true, message, severity: "success" });
+        // TODO: Check user info in create_account1 either the database has their unique username, email or phone number
+        await createUser({
+          id: unregisteredUser.id,
+          username: unregisteredUser.name,
+          email: unregisteredUser.email,
+          phone_number: unregisteredUser.phone,
+        });
         router.push("/");
       } else {
         setSnackbar({ open: true, message, severity: "error" });
       }
     } catch (error) {
-      console.log(`Error: ${error}`);
+      setSnackbar({ open: true, message: getErrorMessage(error), severity: "error" });
     }
   };
 
