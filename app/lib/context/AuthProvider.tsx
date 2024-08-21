@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
 interface UnregisteredUser {
+  id: string;
   email: string;
   name: string;
   phone: string;
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [unregisteredUser, setUnregisteredUser] = useState<UnregisteredUser>({
+    id: "",
     email: "",
     name: "",
     phone: "",
