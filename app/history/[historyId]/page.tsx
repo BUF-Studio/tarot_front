@@ -52,7 +52,6 @@ export default function HistoryDetails() {
         alignItems="center"
         maxWidth="md"
       >
-        {cards.}
         <Image
           src="/logo.png"
           alt="Logo"
