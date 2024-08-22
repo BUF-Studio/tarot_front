@@ -9,23 +9,8 @@ import {
 import { useEffect, useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
 
-const CheckoutForm = ({ amount }: { amount: number }) => {
+const CheckoutForm = ({ amount, plan }: { amount: number, plan: string }) => {
   const stripe = useStripe();
-
-  const appearance = {
-    theme: "stripe",
-
-    variables: {
-      colorPrimary: "#0570de",
-      colorBackground: "#ffffff",
-      colorText: "#30313d",
-      colorDanger: "#df1b41",
-      fontFamily: "Ideal Sans, system-ui, sans-serif",
-      spacingUnit: "2px",
-      borderRadius: "4px",
-      // See all possible variables below
-    },
-  };
   const elements = useElements();
 
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +53,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${window.location.origin}/payment-success?amount=${amount}`,
+        return_url: `${window.location.origin}/payment-success?plan=${plan}`,
       },
     });
 

@@ -113,19 +113,19 @@
             align-items: baseline;
             margin-bottom: 1rem;
           }
-
-          .button {
-            margin-top: 1rem;
-            align-self: center;
-            border-radius: 100px;
-            box-shadow: none;
-            text-transform: capitalize;
-
-            @media (min-width: 768px) {
-              align-self: flex-end;
-            }
-          }
         }
+      }
+    }
+    
+    .button {
+      margin-top: 1rem;
+      align-self: center;
+      border-radius: 100px;
+      box-shadow: none;
+      text-transform: capitalize;
+
+      @media (min-width: 768px) {
+        align-self: flex-end;
       }
     }
 
@@ -272,11 +272,11 @@
   text-align: center;
   gap: 1rem;
 
-  .buttonGroup{
+  .buttonGroup {
     display: flex;
     flex-direction: row-reverse;
     gap: 1rem;
-    
+
     .planButton {
       cursor: pointer;
       margin-bottom: 1.5rem;

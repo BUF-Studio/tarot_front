@@ -1,4 +1,4 @@
-import ThemeRegistry from "./components/ThemeRegistry";
+import ThemeRegistry from "./components/theme-registry";
 import ConfigureAmplifyClientSide from "./amplify-cognito-config";
 
 import "./globals.scss";
