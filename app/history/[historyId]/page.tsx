@@ -107,7 +107,7 @@ export default function HistoryDetails() {
           {currentSession.summary}
         </h1>
       </Stack>
-      <motion.div
+      {/* <motion.div
         onMouseMove={handleGridParallax}
         ref={gridRef}
         transition={{
@@ -118,17 +118,17 @@ export default function HistoryDetails() {
           x: xBackMotion,
           y: yBackMotion,
         }}
-      >
-        <div className={styles.cardContainer} style={{ padding: 0 }}>
-          {currentSession.cards.map((card, index) => (
-            <Card
-              key={index}
-              card={card}
-              isCurrentCard={index == currentSession.current_card}
-            />
-          ))}
-        </div>
-      </motion.div>
+      > */}
+      <div className={styles.cardContainer} style={{ padding: 0 }}>
+        {currentSession.cards.map((card, index) => (
+          <Card
+            key={index}
+            card={card}
+            isCurrentCard={index == currentSession.current_card}
+          />
+        ))}
+      </div>
+      {/* </motion.div> */}
     </div>
   );
 }
@@ -144,7 +144,7 @@ const Card = ({
     <div className={styles.flipCard}>
       <div className={styles.flipCardInner}>
         <div className={styles.flipCardFront}>
-          <Image src="/logo.png" alt="Card" width={188} height={272} />
+          <Image src="/logo.png" alt="Card" fill={true} />
         </div>
         <div className={styles.flipCardBack}>
           <div
