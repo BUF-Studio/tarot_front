@@ -21,6 +21,7 @@
     "@stripe/stripe-js": "^4.1.0",
     "anchor-pki": "^0.3.2",
     "aws-amplify": "^6.4.0",
+    "framer-motion": "^11.3.29",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",

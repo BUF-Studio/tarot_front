@@ -2,12 +2,10 @@ import styles from "@/app/landing.module.scss";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
 
 export default function PictureMarquee() {
-  const router = useRouter();
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;

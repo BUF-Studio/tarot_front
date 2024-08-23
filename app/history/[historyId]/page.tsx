@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import styles from "../history.module.scss";
 import Image from "next/image";
@@ -6,33 +8,62 @@ import Chip from "@mui/material/Chip";
 
 import { toTitleCase } from "../../_utils/text-formatter";
 import { Session } from "../session-interface";
-export default function HistoryDetails() {
-  const currentSession: Session = {
-    id: "1",
-    question: "What is the meaning of life?",
-    stage: "completed",
-    cards: [
-      { position: "You", description: "Card Name - Detailed Description" },
-      {
-        position: "Situation / Context",
-        description: "Card Name - Detailed Description",
-      },
-      {
-        position: "Challenge",
-        description: "Card Name - Detailed Description",
-      },
-      {
-        position: "Development",
-        description: "Card Name - Detailed Description",
-      },
-      { position: "Outcome", description: "Card Name - Detailed Description" },
-      { position: "Advice", description: "Card Name - Detailed Description" },
-    ],
-    summary: "Summary of the reading that links to the question",
-    current_card: 3,
-    session_created: new Date(),
-  };
+import { motion, useMotionValue, useSpring } from "framer-motion";
+const currentSession: Session = {
+  id: "1",
+  question: "What is the meaning of life?",
+  stage: "completed",
+  cards: [
+    { position: "You", description: "Card Name - Detailed Description" },
+    {
+      position: "Situation / Context",
+      description: "Card Name - Detailed Description",
+    },
+    {
+      position: "Challenge",
+      description: "Card Name - Detailed Description",
+    },
+    {
+      position: "Development",
+      description: "Card Name - Detailed Description",
+    },
+    { position: "Outcome", description: "Card Name - Detailed Description" },
+    { position: "Advice", description: "Card Name - Detailed Description" },
+  ],
+  summary: "Summary of the reading that links to the question",
+  current_card: 3,
+  session_created: new Date(),
+};
 
+export default function HistoryDetails() {
+  const gridRef = React.useRef<HTMLDivElement | null>(null);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const xBackMotion = useSpring(x, { stiffness: 1000, damping: 100 });
+  const yBackMotion = useSpring(y, { stiffness: 1000, damping: 100 });
+
+  const handleGridParallax = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    //disable on mobile
+    if (window.innerWidth < 768) {
+      return;
+    }
+    if (gridRef.current) {
+      const speed = -10;
+      const { width, height } = gridRef.current.getBoundingClientRect();
+      const offsetX = event.pageX - width * 0.5;
+      const offsetY = event.pageY - height * 0.5;
+
+      const newTransformX = (-offsetX * speed) / 200;
+      const newTransformY = (-offsetY * speed) / 200;
+
+      x.set(newTransformX);
+      y.set(newTransformY);
+    }
+  };
   return (
     <div className={styles.historyContainer}>
       <Stack
@@ -76,15 +107,28 @@ export default function HistoryDetails() {
           {currentSession.summary}
         </h1>
       </Stack>
-      <div className={styles.cardContainer} style={{ padding: 0 }}>
-        {currentSession.cards.map((card, index) => (
-          <Card
-            key={index}
-            card={card}
-            isCurrentCard={index == currentSession.current_card}
-          />
-        ))}
-      </div>
+      <motion.div
+        onMouseMove={handleGridParallax}
+        ref={gridRef}
+        transition={{
+          duration: 1.25,
+          ease: [0.43, 0.13, 0.23, 0.96],
+        }}
+        style={{
+          x: xBackMotion,
+          y: yBackMotion,
+        }}
+      >
+        <div className={styles.cardContainer} style={{ padding: 0 }}>
+          {currentSession.cards.map((card, index) => (
+            <Card
+              key={index}
+              card={card}
+              isCurrentCard={index == currentSession.current_card}
+            />
+          ))}
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -100,7 +144,7 @@ const Card = ({
     <div className={styles.flipCard}>
       <div className={styles.flipCardInner}>
         <div className={styles.flipCardFront}>
-          <Image src="/logo-188-272.png" alt="Card" width={188} height={272} />
+          <Image src="/logo.png" alt="Card" width={188} height={272} />
         </div>
         <div className={styles.flipCardBack}>
           <div
