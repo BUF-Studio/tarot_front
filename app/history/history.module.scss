@@ -51,26 +51,24 @@
     backface-visibility: hidden;
   }
 
+  .flipCardFront{
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
   .flipCardBack {
     background-color: #241947;
     border-radius: 1rem;
     transform: rotateY(180deg);
 
     .flipCardInnerBack {
+      background-color: white;
       border-radius: 1rem;
       margin: 16px;
       display: flex;
       height: calc(100% - 32px);
       flex-direction: column;
       justify-content: center;
-    }
-
-    .currentCard {
-      background-color: var(--color-primary-container);
-    }
-
-    .notCurrentCard {
-      background-color: white;
     }
   }
 }

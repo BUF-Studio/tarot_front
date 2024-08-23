@@ -14,21 +14,36 @@ const currentSession: Session = {
   question: "What is the meaning of life?",
   stage: "completed",
   cards: [
-    { position: "You", description: "Card Name - Detailed Description" },
+    {
+      position: "You",
+      description:
+        "Nine of Pentacles - This card signifies independence, abundance, and self-sufficiency. You are feeling confident and secure in your abilities going into the exam.",
+    },
     {
       position: "Situation / Context",
-      description: "Card Name - Detailed Description",
+      description:
+        "The Tower - This card represents sudden change, upheaval, and chaos. The situation surrounding your exam may be unpredictable and challenging.",
     },
     {
       position: "Challenge",
-      description: "Card Name - Detailed Description",
+      description:
+        "Five of Cups - This card signifies regret, loss, and dwelling on the past. Your challenge lies in overcoming any negative emotions or setbacks that may hinder your performance.",
     },
     {
       position: "Development",
-      description: "Card Name - Detailed Description",
+      description:
+        "The Magician - This card symbolizes manifestation, creativity, and willpower. You are in a phase of growth and development, honing your skills and knowledge for the exam.",
     },
-    { position: "Outcome", description: "Card Name - Detailed Description" },
-    { position: "Advice", description: "Card Name - Detailed Description" },
+    {
+      position: "Outcome",
+      description:
+        "Ace of Swords - This card represents clarity, truth, and breakthroughs. The outcome of your exam is likely to be positive, with new insights and achievements.",
+    },
+    {
+      position: "Advice",
+      description:
+        "The High Priestess - This card signifies intuition, inner wisdom, and mystery. Trust your inner voice and intuition during the exam, listen to your instincts and stay focused on your goals.",
+    },
   ],
   summary: "Summary of the reading that links to the question",
   current_card: 3,
@@ -121,11 +136,7 @@ export default function HistoryDetails() {
       > */}
       <div className={styles.cardContainer} style={{ padding: 0 }}>
         {currentSession.cards.map((card, index) => (
-          <Card
-            key={index}
-            card={card}
-            isCurrentCard={index == currentSession.current_card}
-          />
+          <Card key={index} card={card} />
         ))}
       </div>
       {/* </motion.div> */}
@@ -135,25 +146,23 @@ export default function HistoryDetails() {
 
 const Card = ({
   card,
-  isCurrentCard,
 }: {
   card: { position: string; description: string };
-  isCurrentCard: boolean;
 }) => {
   return (
     <div className={styles.flipCard}>
       <div className={styles.flipCardInner}>
         <div className={styles.flipCardFront}>
-          <Image src="/logo.png" alt="Card" fill={true} />
+          <Image
+            src={`/cards/${card.description.split("-")[0].trimEnd()}.jpg`}
+            alt={card.description.split("-")[0].trimEnd()}
+            fill={true}
+          />
         </div>
         <div className={styles.flipCardBack}>
-          <div
-            className={`${styles.flipCardInnerBack} ${
-              isCurrentCard ? styles.currentCard : styles.notCurrentCard
-            }`}
-          >
+          <div className={styles.flipCardInnerBack}>
             <h1 className={`title-medium`}>{card.position}</h1>
-            <p className={`body-medium`}>{card.description}</p>
+            <p className={`body-medium`}>{card.description.split("-")[1]}</p>
           </div>
         </div>
       </div>
