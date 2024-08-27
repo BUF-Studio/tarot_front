@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
-import "./globals.scss";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import ThemeRegistry from "./components/ThemeRegistry";
+import ThemeRegistry from "./components/theme-registry";
 import ConfigureAmplifyClientSide from "./amplify-cognito-config";
-import "./lib/font.css"
+
+import "./globals.scss";
+import "./lib/font.css";
+
+import type { Metadata } from "next";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { useEffect } from "react";
 import { setupStorageListener } from "./lib/aws/authUtils";
 

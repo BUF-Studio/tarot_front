@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: 1rem;
+
+  img {
+    width: 12rem;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    cursor: pointer;
+    margin: 1.5rem 0;
+    border-radius: 200px;
+    width: fit-content;
+    align-self: center;
+    box-shadow: none;
+    text-transform: capitalize;
+  }
+}

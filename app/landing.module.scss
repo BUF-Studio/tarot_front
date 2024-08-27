@@ -113,19 +113,19 @@
             align-items: baseline;
             margin-bottom: 1rem;
           }
-
-          .button {
-            margin-top: 1rem;
-            align-self: center;
-            border-radius: 100px;
-            box-shadow: none;
-            text-transform: capitalize;
-
-            @media (min-width: 768px) {
-              align-self: flex-end;
-            }
-          }
         }
+      }
+    }
+    
+    .button {
+      margin-top: 1rem;
+      align-self: center;
+      border-radius: 100px;
+      box-shadow: none;
+      text-transform: capitalize;
+
+      @media (min-width: 768px) {
+        align-self: flex-end;
       }
     }
 
@@ -180,8 +180,8 @@
 
   @media (min-width: 768px) {
     margin-top: 4rem;
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 49.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 40rem;
     padding: 1.5rem;
   }
 
@@ -243,7 +243,7 @@
   height: 30vh;
   width: 30vh;
   margin-bottom: 2rem;
-  background-color: var(--color-background);
+  // background-color: var(--color-background);
   perspective: 1000px;
   overflow: hidden;
 
@@ -272,11 +272,11 @@
   text-align: center;
   gap: 1rem;
 
-  .buttonGroup{
+  .buttonGroup {
     display: flex;
     flex-direction: row-reverse;
     gap: 1rem;
-    
+
     .planButton {
       cursor: pointer;
       margin-bottom: 1.5rem;
