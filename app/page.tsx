@@ -8,7 +8,7 @@ import PictureMarquee from "@/app/components/card-marquee";
 import SubscriptionSection from "@/app/components/subscription-section";
 import Stack from "@mui/material/Stack";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
 import { MdUpgrade } from "react-icons/md";
 import { handleSignOut } from "@/app/lib/aws/cognito";
