@@ -51,7 +51,7 @@
     backface-visibility: hidden;
   }
 
-  .flipCardFront{
+  .flipCardFront {
     border-radius: 8px;
     overflow: hidden;
   }
@@ -64,6 +64,7 @@
     .flipCardInnerBack {
       background-color: white;
       border-radius: 1rem;
+      padding: 0.5rem;
       margin: 16px;
       display: flex;
       height: calc(100% - 32px);
@@ -109,4 +110,15 @@
   border-radius: 16px;
   background-color: var(--color-secondary-container);
   padding: 1rem;
+}
+
+.ellipsisText {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  white-space: normal;
 }

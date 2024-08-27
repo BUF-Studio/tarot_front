@@ -12,94 +12,65 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import { toTitleCase } from "@/app/_utils/text-formatter";
 import { Session } from "./session-interface";
+import { authenticatedUser } from "@/app/_utils/amplify-server-utils";
+import { NextServer } from "@aws-amplify/adapter-nextjs";
+import { redirect } from "next/navigation";
+import { handleGetCurrentUser } from "../lib/aws/cognito";
 
-export default function History() {
-  const session: Session[] = [
-    {
-      id: "1",
-      question: "What is the meaning of life?",
-      stage: "completed",
-      cards: [
-        { position: "You", description: "Card Name - Detailed Description" },
-        {
-          position: "Situation / Context",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Challenge",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Development",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Outcome",
-          description: "Card Name - Detailed Description",
-        },
-        { position: "Advice", description: "Card Name - Detailed Description" },
-      ],
-      summary: "Summary of the reading that links to the question",
-      current_card: 3,
-      session_created: new Date(),
-    },
-    {
-      id: "2",
-      question: "Will I find true love?",
-      stage: "in progress",
-      cards: [
-        { position: "You", description: "Card Name - Detailed Description" },
-        {
-          position: "Situation / Context",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Challenge",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Development",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Outcome",
-          description: "Card Name - Detailed Description",
-        },
-        { position: "Advice", description: "Card Name - Detailed Description" },
-      ],
-      summary: "Summary of the reading that links to the question",
-      current_card: 2,
-      session_created: new Date(),
-    },
-    {
-      id: "3",
-      question: "Should I change my career?",
-      stage: "in progress",
-      cards: [
-        { position: "You", description: "Card Name - Detailed Description" },
-        {
-          position: "Situation / Context",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Challenge",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Development",
-          description: "Card Name - Detailed Description",
-        },
-        {
-          position: "Outcome",
-          description: "Card Name - Detailed Description",
-        },
-        { position: "Advice", description: "Card Name - Detailed Description" },
-      ],
-      summary: "Summary of the reading that links to the question",
-      current_card: 0,
-      session_created: new Date(),
-    },
-  ];
+export default async function History() {
+  const user = await handleGetCurrentUser();
+  console.log("User Id " , user);
+
+  if (!user) {
+    redirect("/signin");
+  }
+  const userId = user.userId;
+
+  // const res = await fetch(
+  //   `http://${process.env.BACKEND_URL}/userSessions?user_id=${userId}`,
+  //   {
+  //     method: "GET",
+  //     cache: "force-cache",
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //   }
+  // );
+
+  const session: Session[] = [];
+
+  if (!session || session.length === 0) {
+    return (
+      <div className={styles.historyContainer}>
+        <Stack
+          width="100%"
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          maxWidth="md"
+          sx={{ width: "100%", my: 2, pr: { xs: 2 } }}
+        >
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={64}
+            height={64}
+            className={styles.logo}
+          />
+          <Link href={"/"}>
+            <IconButton aria-label="Go to home" edge="end">
+              <CloseRoundedIcon />
+            </IconButton>
+          </Link>
+        </Stack>
+        <Container maxWidth="sm">
+          <p className="body-large" style={{ textAlign: "center" }}>
+            No history yet...
+          </p>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.historyContainer}>
@@ -109,6 +80,7 @@ export default function History() {
         justifyContent="space-between"
         alignItems="center"
         maxWidth="md"
+        sx={{ width: "100%", my: 2, pr: { xs: 2 } }}
       >
         <Image
           src="/logo.png"
@@ -132,7 +104,7 @@ export default function History() {
           autoComplete="search"
         />
         <Divider sx={{ my: 2 }} />
-        {session.map((session) => (
+        {session.map((session: Session) => (
           <HistoryCard key={session.id} session={session} />
         ))}
       </Container>
@@ -162,7 +134,7 @@ const HistoryCard = ({ session }: { session: Session }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <h1 className={`title-large`}>{session.question}</h1>
+              <h1 className={`title-large`}>{toTitleCase(session.question)}</h1>
               <p className={`label-large ${styles.subtitle}`}>
                 {toTitleCase(session.stage)}
               </p>
@@ -173,7 +145,9 @@ const HistoryCard = ({ session }: { session: Session }) => {
               alignItems="center"
               mt={0.5}
             >
-              <p className={`body-large`}>{session.summary}</p>
+              <p className={`body-large ${styles.ellipsisText}`}>
+                {session.summary}
+              </p>
             </Stack>
           </Container>
         </Stack>

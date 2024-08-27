@@ -1,10 +1,8 @@
 export interface Session {
-    id: string;
-    question: string;
-    stage: string;
-    cards: { position: string; description: string }[];
-    summary: string;
-    current_card: number;
-    session_created: Date;
-  }
-  
+  cards: { position: string; description: string }[];
+  id: string;
+  question: string;
+  session_created: string;
+  stage: string;
+  summary: string;
+}
