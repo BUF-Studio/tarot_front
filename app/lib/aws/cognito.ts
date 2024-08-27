@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { z } from "zod";
 import {
   signUp,
   confirmSignUp,
@@ -11,119 +11,84 @@ import {
   resetPassword,
 } from "aws-amplify/auth";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
+import { SignupSchema } from "@/app/_utils/validation";
+
+type AuthResult = {
+  success: boolean;
+  message?: string;
+  userId?: string;
+  error?: string;
+};
 
 export async function handleGetCurrentUser() {
   try {
-    const user = await getCurrentUser();
-    return user;
+    return await getCurrentUser();
   } catch (error) {
     console.error("Error getting current user", error);
+    return null;
   }
 }
 
-export async function handleSignUp(
-  email: string,
-  phone_number: string,
-  preferred_username: string,
-  password: string
-) {
+export async function handleSignUp(formData: FormData): Promise<AuthResult> {
   try {
-    const { isSignUpComplete, userId, nextStep } = await signUp({
-      username: email,
-      password: password,
+    const validatedData = validateFormData(formData);
+    const { userId } = await signUp({
+      username: validatedData.email,
+      password: validatedData.password,
       options: {
         userAttributes: {
-          email,
-          phone_number,
-          preferred_username,
+          email: validatedData.email,
         },
-        autoSignIn: true,
+        autoSignIn: true
       },
     });
-    console.log("Is sign up complete", isSignUpComplete);
-    console.log("Next step", nextStep);
-    return { message: "Sign up successful", userId};
+    return { success: true, userId };
   } catch (error) {
-    if (getErrorMessage(error) === "User already exists") {
-      return {
-        message: "Email already exists. Please sign in instead.",
-        verification: true,
-      };
-    }
-
-    return {
-      message: getErrorMessage(error) || "An error occurred during sign up",
-      verification: false,
-    };
+    return handleAuthError(error, "signup");
   }
 }
 
 export async function handleConfirmSignUp(
   email: string,
-  verificationCode: string
-) {
+  formData: FormData
+): Promise<AuthResult> {
   try {
     if (!email) {
       throw new Error("Email not found. Please sign up again.");
     }
     const { isSignUpComplete, nextStep, userId } = await confirmSignUp({
       username: email,
-      confirmationCode: verificationCode,
+      confirmationCode: String(formData.get("code")),
     });
-    console.log(
-      `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep} User: ${userId}`
-    );
     await autoSignIn();
-    return {
-      success: true,
-      message: "Verification successful",
-      userId: userId,
-    };
+    console.log(
+      `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep.signUpStep} User: ${userId}`
+    );
+    return { success: true, message: "Verification successful", userId };
   } catch (error) {
     if (
       getErrorMessage(error) ===
       "User cannot be confirmed. Current status is CONFIRMED"
     ) {
-      return {
-        success: true,
-        message: "User has been VERIFIED",
-      };
+      return { success: true, message: "User has been VERIFIED" };
     }
-
-    console.error("Error confirming sign up", error);
-    // Handle error (e.g., show error message to the user)
-    return {
-      success: false,
-      message:
-        getErrorMessage(error) || "An error occurred during email verification",
-    };
+    return handleAuthError(error, "email verification");
   }
 }
 
 export async function handleSendEmailVerificationCode(
-  prevState: { message: string; errorMessage: string },
   email: string
-) {
+): Promise<AuthResult> {
   try {
-    await resendSignUpCode({
-      username: email,
-    });
-    console.log("Verification code sent");
-    return {
-      ...prevState,
-      message: "Verification code sent",
-      errorMessage: "",
-    };
+    await resendSignUpCode({ username: email });
+    return { success: true, message: "Verification code sent" };
   } catch (error) {
-    console.error("Error sending email verification code", error);
-    return { ...prevState, errorMessage: error as string };
+    return handleAuthError(error, "sending verification code");
   }
 }
 
-export async function handleSignIn(formData: FormData) {
+export async function handleSignIn(formData: FormData): Promise<AuthResult> {
   try {
-    console.log(`Email: ${String(formData.get("email"))}`);
-    console.log(`Password: ${String(formData.get("password"))}`);
     const { isSignedIn, nextStep } = await signIn({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
@@ -133,39 +98,28 @@ export async function handleSignIn(formData: FormData) {
     }
     return { success: true, message: "Sign in successful" };
   } catch (error) {
-    console.error("Error signing in", error);
-    return {
-      success: false,
-      message: getErrorMessage(error) || "An error occurred during sign in",
-    };
+    return handleAuthError(error, "sign in");
   }
 }
 
-export async function handleSignOut() {
+export async function handleSignOut(): Promise<void> {
   try {
-    signOut();
+    await signOut();
     console.log("User signed out");
-    // redirect("/signin");
   } catch (error) {
     console.error("Error signing out", error);
-    // Handle error (e.g., show error message to the user)
   }
 }
 
-export async function handleResetPassword(email: string) {
+export async function handleResetPassword(email: string): Promise<AuthResult> {
   try {
     await resetPassword({ username: email });
     return {
       success: true,
-      message: "A verification code has been send to your email address.",
+      message: "A verification code has been sent to your email address.",
     };
   } catch (error) {
-    console.error("Error resetting password", error);
-    return {
-      success: false,
-      message:
-        getErrorMessage(error) || "An error occurred during email verification",
-    };
+    return handleAuthError(error, "resetting password");
   }
 }
 
@@ -173,19 +127,67 @@ export async function handleConfirmResetPassword(
   username: string,
   confirmationCode: string,
   newPassword: string
-) {
+): Promise<AuthResult> {
   try {
-    await confirmResetPassword({
-      username,
-      confirmationCode,
-      newPassword,
-    });
+    await confirmResetPassword({ username, confirmationCode, newPassword });
     return { success: true, message: "Password reset successful" };
   } catch (error) {
-    return {
-      success: false,
-      message:
-        getErrorMessage(error) || "An error occurred during email verification",
-    };
+    return handleAuthError(error, "confirming password reset");
   }
+}
+
+// Helper functions
+
+function validateFormData(formData: FormData) {
+  const rawFormData = Object.fromEntries(formData.entries());
+  return SignupSchema.parse(rawFormData);
+}
+
+async function performSignUp(validatedData: z.infer<typeof SignupSchema>) {
+  return await signUp({
+    username: validatedData.email,
+    password: validatedData.password,
+    options: {
+      userAttributes: {
+        email: validatedData.email,
+      },
+      // Optional
+      autoSignIn: false,
+    },
+  });
+}
+
+function handleAuthError(error: unknown, context: string): AuthResult {
+  console.error(`Error during ${context}:`, error);
+
+  if (error instanceof z.ZodError) {
+    return { success: false, error: error.errors[0].message };
+  }
+
+  if (error instanceof Error) {
+    const errorMessage = getCognitoErrorMessage(error.name);
+    if (errorMessage) {
+      return { success: false, error: errorMessage };
+    }
+  }
+
+  return {
+    success: false,
+    error: `An unexpected error occurred during ${context}`,
+  };
+}
+
+function getCognitoErrorMessage(errorName: string): string | null {
+  const errorMessages: Record<string, string> = {
+    UsernameExistsException: "An account with this email already exists",
+    InvalidPasswordException:
+      "Password does not meet the requirements set by your admin",
+    InvalidParameterException: "Invalid Parameters",
+    CodeDeliveryFailureException:
+      "Failed to send verification code. Please try again",
+    LimitExceededException: "Attempt limit exceeded, please try again later",
+    TooManyRequestsException: "Too many requests, please try again later",
+  };
+
+  return errorMessages[errorName] || null;
 }

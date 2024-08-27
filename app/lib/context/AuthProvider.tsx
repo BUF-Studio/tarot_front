@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 interface UnregisteredUser {
@@ -8,28 +8,58 @@ interface UnregisteredUser {
   email: string;
   name: string;
   phone: string;
+  age?: number;
+  gender?: string;
 }
 
 interface AuthContextType {
   unregisteredUser: UnregisteredUser;
-  setUnregisteredUser: (user: UnregisteredUser) => void;
+  setUnregisteredUser: (user: Partial<UnregisteredUser>) => void;
+  clearUnregisteredUser: () => void;
 }
+
+const initialUnregisteredUser: UnregisteredUser = {
+  id: "",
+  email: "",
+  name: "",
+  phone: "",
+  age: 0,
+  gender: "",
+};
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [unregisteredUser, setUnregisteredUser] = useState<UnregisteredUser>({
-    id: "",
-    email: "",
-    name: "",
-    phone: "",
-  });
+  const [unregisteredUser, setUnregisteredUser] = useState<UnregisteredUser>(initialUnregisteredUser);
+
+  useEffect(() => {
+    // Load unregistered user data from localStorage when the component mounts
+    const storedUser = localStorage.getItem('unregisteredUser');
+    if (storedUser) {
+      setUnregisteredUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const updateUnregisteredUser = (user: Partial<UnregisteredUser>) => {
+    setUnregisteredUser(prevUser => {
+      const newUser = { ...prevUser, ...user };
+      // Save to localStorage
+      localStorage.setItem('unregisteredUser', JSON.stringify(newUser));
+      return newUser;
+    });
+  };
+
+  const clearUnregisteredUser = () => {
+    setUnregisteredUser(initialUnregisteredUser);
+    localStorage.removeItem('unregisteredUser');
+  };
 
   return (
     <AuthContext.Provider
       value={{
         unregisteredUser,
-        setUnregisteredUser,
+        setUnregisteredUser: updateUnregisteredUser,
+        clearUnregisteredUser,
       }}
     >
       {children}

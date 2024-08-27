@@ -4,6 +4,8 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import ThemeRegistry from "./components/ThemeRegistry";
 import ConfigureAmplifyClientSide from "./amplify-cognito-config";
 import "./lib/font.css"
+import { useEffect } from "react";
+import { setupStorageListener } from "./lib/aws/authUtils";
 
 export const metadata: Metadata = {
   title: "Tarotmate",
@@ -15,6 +17,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       <body>

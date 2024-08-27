@@ -16,6 +16,8 @@ import { handleSignOut } from "./lib/aws/cognito";
 import { useAuthUser } from "./_hooks/use-auth-user";
 import { useRouter } from "next/navigation";
 import { toTitleCase } from "./_utils/text-formatter";
+import { clearNeedsDbCheckCookie } from "./_utils/cookieManager";
+import { getUser } from "./lib/api";
 
 const picturePathData = [
   "/balance.png",
@@ -38,6 +40,24 @@ export default function Home() {
   const handleClose = () => setOpen(false);
   const router = useRouter();
   const user = useAuthUser();
+  const [dbUser, setdbUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function retrieveCurrentUser() {
+      try {
+        const dbUser = await getUser(user?.userId);
+        if (dbUser) {
+          setdbUser(dbUser);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+      setLoading(false);
+    }
+
+    retrieveCurrentUser();
+  }, [user]);
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
