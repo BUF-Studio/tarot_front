@@ -14,6 +14,7 @@ import { Alert, MenuItem, Select, Snackbar, TextField } from "@mui/material";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
+import { createUser } from "@/app/lib/api";
 
 const SignUp = () => {
   const router = useRouter();
@@ -29,8 +30,25 @@ const SignUp = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const userData = {
+      id: user?.userId,
+      email: user?.email,
+      username: formData.get("username"),
+      phone_number: formData.get("phone"),
+      age: formData.get("age"),
+      gender: formData.get("gender")
+    };
+
+    try {
+      await createUser(userData);
+      showSnackbar("Successfully added user","success")
+    } catch (error) {
+      showSnackbar(getErrorMessage(error), "error")
+    }
   };
 
   return (
@@ -50,13 +68,11 @@ const SignUp = () => {
           <p className={`body-large ${styles.subtitle}`}>
             Tell us abit about yourself
           </p>
-          <p>
-            User email {user?.email}
-          </p>
+          <p>User email {user?.email}</p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
-            id="name"
+            id="username"
             label="Username"
             name="name"
             variant="outlined"
@@ -88,10 +104,9 @@ const SignUp = () => {
               name="gender"
               label="Gender"
             >
-              <MenuItem value="male">Male</MenuItem>
-              <MenuItem value="female">Female</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
-              <MenuItem value="prefer_not_to_say">Prefer not to say</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Prefer not to say">Prefer not to say</MenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -103,7 +118,7 @@ const SignUp = () => {
             placeholder="25"
             className={styles.input}
             inputProps={{
-              min: 18,
+              min: 0,
               max: 120,
             }}
           />
