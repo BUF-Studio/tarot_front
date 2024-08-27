@@ -7,7 +7,7 @@ export async function createUser(userData: {
   gender: string;
 }) {
   console.log(userData);
-  const response = await fetch("http://127.0.0.1:5000/createUser", {
+  const response = await fetch("http://127.0.0.1:5001/createUser", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export async function createUser(userData: {
 export async function getUser(userId: string) {
   try {
     const response = await fetch(
-      `http://127.0.0.1:5000/getUser?userId=${encodeURIComponent(userId)}`,
+      `http://127.0.0.1:5001/getUser?userId=${encodeURIComponent(userId)}`,
       {
         method: "GET",
         headers: {

@@ -46,6 +46,7 @@ const SignUp = () => {
     try {
       await createUser(userData);
       showSnackbar("Successfully added user","success")
+      router.push("/")
     } catch (error) {
       showSnackbar(getErrorMessage(error), "error")
     }
@@ -74,7 +75,7 @@ const SignUp = () => {
           <TextField
             id="username"
             label="Username"
-            name="name"
+            name="username"
             variant="outlined"
             placeholder="Johnny Depp"
             className={styles.input}

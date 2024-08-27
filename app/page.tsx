@@ -46,9 +46,15 @@ export default function Home() {
   useEffect(() => {
     async function retrieveCurrentUser() {
       try {
-        const dbUser = await getUser(user?.userId);
-        if (dbUser) {
-          setdbUser(dbUser);
+        if (user?.userId) {
+          console.log(`User ID used to retrieve data: ${user?.userId}`);
+          const dbUser = await getUser(user?.userId);
+          if (dbUser) {
+            console.log(dbUser);
+            setdbUser(dbUser);
+          } else {
+            router.push("/profile-info");
+          }
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -57,7 +63,7 @@ export default function Home() {
     }
 
     retrieveCurrentUser();
-  }, [user]);
+  }, [user, router]);
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
@@ -149,17 +155,26 @@ export default function Home() {
             ))}
           </Marquee>
           <h1 className={`display-medium`}>
-            Welcome {toTitleCase(user?.preferred_username)}!
+            Welcome {toTitleCase(dbUser?.username)}!
           </h1>
           <div className={styles.contactInfo}>
             <span className="title-medium">
               <BsMailbox2 size={24} className={styles.icon} />
-              {user?.email}
+              {dbUser?.email}
             </span>
             <span className="title-medium">
               <BsFillTelephoneFill size={24} className={styles.icon} />
-              {user?.phone_number}
+              {dbUser?.phone_number}
             </span>
+            <span className="title-medium">
+              <BsFillTelephoneFill size={24} className={styles.icon} />
+              {dbUser?.age}
+            </span>
+            <span className="title-medium">
+              <BsFillTelephoneFill size={24} className={styles.icon} />
+              {dbUser?.gender}
+            </span>
+            
           </div>
 
           <div className={styles.planInfoContainer}>
