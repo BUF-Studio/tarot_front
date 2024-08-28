@@ -10,12 +10,9 @@ const publicRoutes = [
   "/confirm-signup",
   "/signup",
   "/signup/account-setup",
-  "/profile-info",  // Added this as it's used for first-time user info
+  "/signup/verification",
+  "/profile-info",
 ];
-
-function isDynamicPublicRoute(pathname: string): boolean {
-  return pathname.startsWith("/signup/verification/") && pathname.split("/").length === 4;
-}
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -23,11 +20,12 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isPublicRoute = publicRoutes.includes(pathname) || isDynamicPublicRoute(pathname);
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
   if (user) {
     // If user is authenticated and tries to access a public route, redirect to home
-    if (isPublicRoute && pathname !== "/profile-info") {
+    // Exception: Allow access to /profile-info and /signup/verification even if authenticated
+    if (isPublicRoute && !["/profile-info", "/signup/verification"].some(route => pathname.startsWith(route))) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   } else {

@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { z } from "zod";
 import {
@@ -11,9 +11,11 @@ import {
   getCurrentUser,
   confirmResetPassword,
   resetPassword,
+  type SignUpOutput
 } from "aws-amplify/auth";
-import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { SignupSchema } from "@/app/_utils/validation";
+import { redirect } from "next/navigation";
+import { handleSignUpStep } from "./signUpUtils";
 
 type AuthResult = {
   success: boolean;
@@ -34,58 +36,56 @@ export async function handleGetCurrentUser() {
 export async function handleSignUp(formData: FormData): Promise<AuthResult> {
   try {
     const validatedData = validateFormData(formData);
-    const { userId } = await signUp({
+    const { nextStep, userId } = await signUp({
       username: validatedData.email,
       password: validatedData.password,
       options: {
-        userAttributes: {
-          email: validatedData.email,
-        },
-        autoSignIn: true
+        userAttributes: { email: validatedData.email },
+        autoSignIn: true,
       },
     });
+    console.log(`User ID: ${userId}`);
+    await handleSignUpStep(nextStep, userId);
     return { success: true, userId };
   } catch (error) {
-    return handleAuthError(error, "signup");
+    console.error("Error during sign up:", error);
+    if (error instanceof z.ZodError) {
+      return { success: false, error: error.errors[0].message };
+    }
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "An unexpected error occurred during sign up"
+    };
   }
 }
 
-export async function handleConfirmSignUp(
-  email: string,
-  formData: FormData
-): Promise<AuthResult> {
+export async function handleConfirmSignUp(username: string, formData: FormData): Promise<AuthResult> {
   try {
-    if (!email) {
-      throw new Error("Email not found. Please sign up again.");
-    }
-    const { isSignUpComplete, nextStep, userId } = await confirmSignUp({
-      username: email,
+    const { nextStep, userId } = await confirmSignUp({
+      username,
       confirmationCode: String(formData.get("code")),
     });
-    await autoSignIn();
-    console.log(
-      `Is sign up complete: ${isSignUpComplete} Next step: ${nextStep.signUpStep} User: ${userId}`
-    );
+    await handleSignUpStep(nextStep, userId);
     return { success: true, message: "Verification successful", userId };
   } catch (error) {
-    if (
-      getErrorMessage(error) ===
-      "User cannot be confirmed. Current status is CONFIRMED"
-    ) {
-      return { success: true, message: "User has been VERIFIED" };
-    }
-    return handleAuthError(error, "email verification");
+    console.error("Error during confirmation:", error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "An unexpected error occurred during confirmation"
+    };
   }
 }
 
-export async function handleSendEmailVerificationCode(
-  email: string
-): Promise<AuthResult> {
+export async function handleSendEmailVerificationCode(email: string): Promise<AuthResult> {
   try {
     await resendSignUpCode({ username: email });
     return { success: true, message: "Verification code sent" };
   } catch (error) {
-    return handleAuthError(error, "sending verification code");
+    console.error("Error sending verification code:", error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "An unexpected error occurred while sending verification code"
+    };
   }
 }
 
@@ -100,7 +100,11 @@ export async function handleSignIn(formData: FormData): Promise<AuthResult> {
     }
     return { success: true, message: "Sign in successful" };
   } catch (error) {
-    return handleAuthError(error, "sign in");
+    console.error("Error during sign in:", error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "An unexpected error occurred during sign in"
+    };
   }
 }
 
@@ -109,7 +113,7 @@ export async function handleSignOut(): Promise<void> {
     await signOut();
     console.log("User signed out");
   } catch (error) {
-    console.error("Error signing out", error);
+    console.error("Error signing out:", error);
   }
 }
 
@@ -121,7 +125,11 @@ export async function handleResetPassword(email: string): Promise<AuthResult> {
       message: "A verification code has been sent to your email address.",
     };
   } catch (error) {
-    return handleAuthError(error, "resetting password");
+    console.error("Error resetting password:", error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "An unexpected error occurred while resetting password"
+    };
   }
 }
 
@@ -134,62 +142,15 @@ export async function handleConfirmResetPassword(
     await confirmResetPassword({ username, confirmationCode, newPassword });
     return { success: true, message: "Password reset successful" };
   } catch (error) {
-    return handleAuthError(error, "confirming password reset");
+    console.error("Error confirming password reset:", error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "An unexpected error occurred while confirming password reset"
+    };
   }
 }
-
-// Helper functions
 
 function validateFormData(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
   return SignupSchema.parse(rawFormData);
-}
-
-async function performSignUp(validatedData: z.infer<typeof SignupSchema>) {
-  return await signUp({
-    username: validatedData.email,
-    password: validatedData.password,
-    options: {
-      userAttributes: {
-        email: validatedData.email,
-      },
-      // Optional
-      autoSignIn: false,
-    },
-  });
-}
-
-function handleAuthError(error: unknown, context: string): AuthResult {
-  console.error(`Error during ${context}:`, error);
-
-  if (error instanceof z.ZodError) {
-    return { success: false, error: error.errors[0].message };
-  }
-
-  if (error instanceof Error) {
-    const errorMessage = getCognitoErrorMessage(error.name);
-    if (errorMessage) {
-      return { success: false, error: errorMessage };
-    }
-  }
-
-  return {
-    success: false,
-    error: `An unexpected error occurred during ${context}`,
-  };
-}
-
-function getCognitoErrorMessage(errorName: string): string | null {
-  const errorMessages: Record<string, string> = {
-    UsernameExistsException: "An account with this email already exists",
-    InvalidPasswordException:
-      "Password does not meet the requirements set by your admin",
-    InvalidParameterException: "Invalid Parameters",
-    CodeDeliveryFailureException:
-      "Failed to send verification code. Please try again",
-    LimitExceededException: "Attempt limit exceeded, please try again later",
-    TooManyRequestsException: "Too many requests, please try again later",
-  };
-
-  return errorMessages[errorName] || null;
 }

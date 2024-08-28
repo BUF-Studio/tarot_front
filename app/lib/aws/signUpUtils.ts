@@ -5,40 +5,30 @@ import { redirect } from "next/navigation";
 
 export async function handleSignUpStep(
   step: SignUpOutput["nextStep"],
-  userId?: SignUpOutput["userId"]
+  userId?: string
 ): Promise<void> {
   switch (step.signUpStep) {
-    case "CONFIRM_SIGN_UP": {
-      // Redirect end-user to confirm-sign up screen.
+    case "CONFIRM_SIGN_UP":
       console.log("The user should go to confirm Sign Up");
       redirect(`/signup/verification?userId=${userId}`);
       break;
-    }
-    case "COMPLETE_AUTO_SIGN_IN": {
-      const codeDeliveryDetails = step.codeDeliveryDetails;
-      if (codeDeliveryDetails) {
-        // Redirect user to confirm-sign-up with link screen.
-        console.log("The user should got to confirm-sign-up");
+    case "COMPLETE_AUTO_SIGN_IN":
+      if (step.codeDeliveryDetails) {
+        console.log("The user should go to confirm sign-up");
         redirect(`/signup/verification?userId=${userId}`);
       } else {
         try {
-          const signInOutput = await autoSignIn();
-          // Handle successful auto sign-in
+          await autoSignIn();
           console.log("The user should successfully Sign-In now");
-          redirect("/personal-info")
+          redirect("/personal-info");
         } catch (error) {
-          // Handle auto sign-in error
-          console.log(`There is some error when sign the user in: ${error}`);
+          console.error("Error during auto sign-in:", error);
+          redirect("/signin");
         }
       }
       break;
-    }
-    
-    default: {
+    default:
       console.error(`Unexpected sign-up step: ${step.signUpStep}`);
-      // Handle unexpected step
-      redirect("/signin")
-      break;
-    }
+      redirect("/signin");
   }
 }

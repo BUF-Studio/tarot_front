@@ -38,12 +38,12 @@ const SignIn = () => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      const { success, message } = await handleSignIn(formData);
-      if (success) {
-        showSnackbar("Successfully Signed In", "success");
+      const { success, message, error } = await handleSignIn(formData);
+      if (success && message) {
+        showSnackbar(message, "success");
         router.push("/");
       } else {
-        showSnackbar(message || "An error occurred during sign in", "error");
+        showSnackbar(error || "An error occurred during sign in", "error");
       }
     } catch (error) {
       console.error("Error signing in", error);

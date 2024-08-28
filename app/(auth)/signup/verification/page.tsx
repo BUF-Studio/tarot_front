@@ -16,6 +16,7 @@ import { Alert, Snackbar } from "@mui/material";
 import { createUser } from "@/app/lib/api";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
+import { handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
 
 const ConfirmSignUp = () => {
   const router = useRouter();

@@ -19,7 +19,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { MdVisibilityOff, MdVisibility } from "react-icons/md";
-import { handleSignUp } from "@/app/lib/aws/handleSignUp";
+import { handleSignUp } from "@/app/lib/aws/cognito";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 
 const SignUp = () => {
@@ -45,16 +45,14 @@ const SignUp = () => {
 
     try {
       const result = await handleSignUp(formData);
-      // if (result.success) {
+      if (result.success) {
         showSnackbar("Account created successfully", "success");
-        // router.push(`/signup/verification?userId=${result.userId}`);
-        // router.push(`/signup/verification?userId=${result.userId}`);
-      // } else {
-      //   showSnackbar(
-      //     result.error ?? "An error has occured during signing you up",
-      //     "error"
-      //   );
-      // }
+      } else {
+        showSnackbar(
+          result.error ?? "An error has occured during signing you up",
+          "error"
+        );
+      }
     } catch (error) {
       showSnackbar("Error signing up", "error");
     }
