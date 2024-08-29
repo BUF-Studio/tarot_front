@@ -17,6 +17,7 @@ import { createUser } from "@/app/lib/api";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
+import SignupTimeline from "@/app/components/signup-timeline";
 
 const ConfirmSignUp = () => {
   const router = useRouter();
@@ -58,12 +59,9 @@ const ConfirmSignUp = () => {
     }
 
     try {
-      const result = await handleConfirmSignUp(
-        userId,
-        formData
-      );
+      const result = await handleConfirmSignUp(userId, formData);
       // if (success) {
-        showSnackbar("Successful Verify Your Account", "success");
+      showSnackbar("Successful Verify Your Account", "success");
       //   router.push("/signup/profile-info");
       // } else {
       //   showSnackbar(
@@ -100,20 +98,23 @@ const ConfirmSignUp = () => {
     <div className={styles.loginContainer}>
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={64}
-            height={64}
-            className={styles.loginLogo}
-          />
-          <h1 className={`headline-large ${styles.title}`}>
-            Verify Your Email
-          </h1>
-          <p className={`body-large ${styles.subtitle}`}>
-            Enter the six digit code we sent to your email address to verify
-            your new TarotMate account
-          </p>
+          <div>
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={64}
+              height={64}
+              className={styles.loginLogo}
+            />
+            <h1 className={`headline-large ${styles.title}`}>
+              Verify Your Email
+            </h1>
+            <p className={`body-large ${styles.subtitle}`}>
+              Enter the six digit code we sent to your email address to verify
+              your new TarotMate account
+            </p>
+          </div>
+          <SignupTimeline />
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField

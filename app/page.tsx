@@ -2,27 +2,20 @@
 import styles from "@/app/landing.module.scss";
 import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
 import PictureMarquee from "@/app/components/card-marquee";
 import SubscriptionSection from "@/app/components/subscription-section";
 import Stack from "@mui/material/Stack";
+import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
-import { MdUpgrade } from "react-icons/md";
 import { handleSignOut } from "@/app/lib/aws/cognito";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
 import { useRouter } from "next/navigation";
 import { toTitleCase } from "@/app/_utils/text-formatter";
-import { clearNeedsDbCheckCookie } from "./_utils/cookieManager";
 import { getUser } from "./lib/api";
-import Link from "next/link";
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const router = useRouter();
   const user = useAuthUser();
   const [dbUser, setdbUser] = useState(null);
@@ -61,34 +54,6 @@ export default function Home() {
 
   return (
     <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box className={styles.modalContainer}>
-          <MdUpgrade size={48} />
-          <span className="headline-medium">Upgrade Plan</span>
-          <span className="body-large">Choose a plan that suits you best</span>
-          <div className={styles.buttonGroup}>
-            <Button
-              variant="outlined"
-              className={styles.planButton}
-              onClick={() => navigateToPayment("standard")}
-            >
-              Standard Plan
-            </Button>
-            <Button
-              variant="contained"
-              className={styles.planButton}
-              onClick={() => navigateToPayment("pro")}
-            >
-              Pro Plan
-            </Button>
-          </div>
-        </Box>
-      </Modal>
       <div className={styles.main}>
         <section className={styles.welcomeSection}>
           <PictureMarquee />
@@ -131,7 +96,7 @@ export default function Home() {
                 <Button
                   variant="contained"
                   className={styles.button}
-                  onClick={handleOpen}
+                  onClick={() => navigateToPayment("standard")}
                 >
                   Upgrade Plan
                 </Button>
