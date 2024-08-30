@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
 
 export default function PictureMarquee() {
-
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const inertia = 2;
 
@@ -70,14 +69,14 @@ const PictureCard: React.FC<PictureCardProps> = ({ path, mousePos }) => {
 
   return (
     <div className={styles.pictureCard}>
-      <animated.div style={springProps}>
+      {/* <animated.div style={springProps}> */}
         <Image
           src={path}
           alt={path}
-          width={window.innerHeight * 0.3}
-          height={window.innerHeight * 0.3}
+          width={188}
+          height={272}
         />
-      </animated.div>
+      {/* </animated.div> */}
     </div>
   );
 };
