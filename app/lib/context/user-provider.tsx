@@ -30,6 +30,7 @@ interface User {
   subscription_type: SubscriptionType;
   subscription_start?: Date;
   subscription_end?: Date;
+  usage: number
 }
 
 interface UserContextType {

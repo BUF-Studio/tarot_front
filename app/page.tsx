@@ -15,6 +15,7 @@ import { toTitleCase } from "@/app/_utils/text-formatter";
 import useSWR from "swr";
 import { useUser } from "./lib/context/user-provider";
 import { Person } from "@mui/icons-material";
+import PlanInfoCard from "./components/plan-info-card";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Home() {
@@ -54,30 +55,7 @@ export default function Home() {
           <h1 className={`display-medium`}>
             Welcome {toTitleCase(user?.name)}!
           </h1>
-          <div className={styles.planInfoContainer}>
-            <div className={styles.planInfo}>
-              <div className={styles.planDetails}>
-                <span className={`${styles.plan} headline-medium`}>
-                  {`${toTitleCase(user?.subscription_type)} Plan`}
-                </span>
-                <span className="body-large">Tarotmate Subscription Plan</span>
-              </div>
-              <div className={styles.progressBar}>
-                <div className={styles.textRow}>
-                  <span className="title-medium">Reading Left</span>
-                  <span className="title-medium">1/2</span>
-                </div>
-                <LinearProgress variant="determinate" value={0.5} />
-                <Button
-                  variant="contained"
-                  className={styles.button}
-                  onClick={() => navigateToPayment("standard")}
-                >
-                  Upgrade Plan
-                </Button>
-              </div>
-            </div>
-          </div> 
+          <PlanInfoCard usage={user?.usage} subscription_type={user?.subscription_type} />
           <Stack spacing={1} direction="row">
             <Link href={"/history"}>
               <Button
@@ -89,22 +67,6 @@ export default function Home() {
                 {user?.name}
               </Button>
             </Link>
-            {/* <Link href={"/history"}>
-              <Button
-                variant="contained"
-                className={styles.button}
-                onClick={() => {}}
-              >
-                History
-              </Button>
-            </Link>
-            <Button
-              variant="text"
-              className={styles.logout}
-              onClick={handleUserSignOut}
-            >
-              Logout
-            </Button> */}
           </Stack>
         </section>
       </div>

@@ -71,6 +71,7 @@ export async function middleware(request: NextRequest) {
   } else {
     // If user is not authenticated and tries to access a protected route, redirect to signin
     if (!isPublicRoute) {
+      console.log("Trigger here")
       return NextResponse.redirect(new URL("/signin", request.url));
     }
   }
