@@ -11,9 +11,6 @@ import {
   handleConfirmSignUp,
   // handleSendEmailVerificationCode,
 } from "@/app/lib/aws/handleConfirmSignUp";
-import { useAuth } from "@/app/lib/context/AuthProvider";
-import { Alert, Snackbar } from "@mui/material";
-import { createUser } from "@/app/lib/api";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
@@ -21,7 +18,6 @@ import SignupTimeline from "@/app/components/signup-timeline";
 
 const ConfirmSignUp = () => {
   const router = useRouter();
-  const auth = useAuth();
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
   const { showSnackbar } = useSnackbar();

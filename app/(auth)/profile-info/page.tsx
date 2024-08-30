@@ -14,21 +14,11 @@ import { Alert, MenuItem, Select, Snackbar, TextField } from "@mui/material";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
-import { createUser } from "@/app/lib/api";
 
 const SignUp = () => {
   const router = useRouter();
   const { showSnackbar } = useSnackbar();
   const user = useAuthUser();
-
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,15 +30,30 @@ const SignUp = () => {
       username: formData.get("username"),
       phone_number: formData.get("phone"),
       age: formData.get("age"),
-      gender: formData.get("gender")
+      gender: formData.get("gender"),
     };
 
     try {
-      await createUser(userData);
-      showSnackbar("Successfully added user","success")
-      router.push("/")
+      const response = await fetch("/api/create-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create user");
+      }
+
+      const createdUser = await response.json();
+      console.log("User created:", createdUser);
+      showSnackbar("Successfully added user", "success");
+      router.push("/");
     } catch (error) {
-      showSnackbar(getErrorMessage(error), "error")
+      console.error("Error creating user:", error);
+      showSnackbar(getErrorMessage(error), "error");
     }
   };
 

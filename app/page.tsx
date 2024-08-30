@@ -6,42 +6,36 @@ import PictureMarquee from "@/app/components/card-marquee";
 import SubscriptionSection from "@/app/components/subscription-section";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
-
 import { useEffect, useState } from "react";
 import { BsFillTelephoneFill, BsMailbox2 } from "react-icons/bs";
 import { handleSignOut } from "@/app/lib/aws/cognito";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
 import { useRouter } from "next/navigation";
 import { toTitleCase } from "@/app/_utils/text-formatter";
-import { getUser } from "./lib/api";
+import useSWR from "swr";
+import { useUser } from "./lib/context/user-provider";
+import { Person } from "@mui/icons-material";
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Home() {
   const router = useRouter();
-  const user = useAuthUser();
-  const [dbUser, setdbUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const authUser = useAuthUser();
+  const { user, setUser } = useUser();
+
+  const { data, error, isLoading } = useSWR(
+    `/api/user?userId=${authUser?.userId}`,
+    fetcher
+  );
 
   useEffect(() => {
-    async function retrieveCurrentUser() {
-      try {
-        if (user?.userId) {
-          console.log(`User ID used to retrieve data: ${user?.userId}`);
-          const dbUser = await getUser(user?.userId);
-          if (dbUser) {
-            console.log(dbUser);
-            setdbUser(dbUser);
-          } else {
-            router.push("/profile-info");
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-      setLoading(false);
+    if (data) {
+      console.log(data);
+      setUser(data.data);
     }
+  }, [data, setUser]);
 
-    retrieveCurrentUser();
-  }, [user, router]);
+  if (error) return <div className={`body-large`}>Failed to load</div>;
+  if (isLoading) return <div className={`body-large`}>Loading...</div>;
 
   const handleUserSignOut = async () => {
     await handleSignOut();
@@ -58,34 +52,15 @@ export default function Home() {
         <section className={styles.welcomeSection}>
           <PictureMarquee />
           <h1 className={`display-medium`}>
-            Welcome {toTitleCase(dbUser?.username)}!
+            Welcome {toTitleCase(user?.name)}!
           </h1>
-          <div className={styles.contactInfo}>
-            <span className="title-medium">
-              <BsMailbox2 size={24} className={styles.icon} />
-              {dbUser?.email}
-            </span>
-            <span className="title-medium">
-              <BsFillTelephoneFill size={24} className={styles.icon} />
-              {dbUser?.phone_number}
-            </span>
-            <span className="title-medium">
-              <BsFillTelephoneFill size={24} className={styles.icon} />
-              {dbUser?.age}
-            </span>
-            <span className="title-medium">
-              <BsFillTelephoneFill size={24} className={styles.icon} />
-              {dbUser?.gender}
-            </span>
-            
-          </div>
           <div className={styles.planInfoContainer}>
             <div className={styles.planInfo}>
               <div className={styles.planDetails}>
                 <span className={`${styles.plan} headline-medium`}>
-                  Free Plan
+                  {`${toTitleCase(user?.subscription_type)} Plan`}
                 </span>
-                <span className="body-large">Tarotmate subscription plan</span>
+                <span className="body-large">Tarotmate Subscription Plan</span>
               </div>
               <div className={styles.progressBar}>
                 <div className={styles.textRow}>
@@ -102,9 +77,19 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> 
           <Stack spacing={1} direction="row">
             <Link href={"/history"}>
+              <Button
+                variant="contained"
+                className={styles.button}
+                startIcon={<Person />}
+                onClick={() => {}}
+              >
+                {user?.name}
+              </Button>
+            </Link>
+            {/* <Link href={"/history"}>
               <Button
                 variant="contained"
                 className={styles.button}
@@ -119,7 +104,7 @@ export default function Home() {
               onClick={handleUserSignOut}
             >
               Logout
-            </Button>
+            </Button> */}
           </Stack>
         </section>
       </div>

@@ -17,7 +17,7 @@ export default function HistoryList() {
 
   const { data, error, isLoading } = useSWR(
     `/api/history?id=${user?.userId}`,
-    fetcher
+    fetcher,
   );
 
   useEffect(() => {
