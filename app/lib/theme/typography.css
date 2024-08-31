@@ -1,0 +1,216 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"); */
+
+:root {
+  --display-large-line-height: 4rem;
+  --display-large-size: 3.5625rem;
+  --display-large-tracking: 0;
+  --display-large-weight: 400;
+
+  --display-medium-line-height: 3.25rem;
+  --display-medium-size: 2.8125rem;
+  --display-medium-tracking: 0;
+  --display-medium-weight: 400;
+
+  --display-small-line-height: 2.75rem;
+  --display-small-size: 2.25rem;
+  --display-small-tracking: 0;
+  --display-small-weight: 400;
+
+  --headline-large-line-height: 2.5rem;
+  --headline-large-size: 2rem;
+  --headline-large-tracking: 0;
+  --headline-large-weight: 400;
+
+  --headline-medium-line-height: 2.25rem;
+  --headline-medium-size: 1.75rem;
+  --headline-medium-tracking: 0;
+  --headline-medium-weight: 400;
+
+  --headline-small-line-height: 2rem;
+  --headline-small-size: 1.5rem;
+  --headline-small-tracking: 0;
+  --headline-small-weight: 400;
+
+  --title-large-line-height: 1.75rem;
+  --title-large-size: 1.375rem;
+  --title-large-tracking: 0;
+  --title-large-weight: 400;
+
+  --title-medium-line-height: 1.5rem;
+  --title-medium-size: 1rem;
+  --title-medium-tracking: 0.009375rem;
+  --title-medium-weight: 500;
+
+  --title-small-line-height: 1.25rem;
+  --title-small-size: 0.875rem;
+  --title-small-tracking: 0.00625rem;
+  --title-small-weight: 500;
+
+  --label-large-line-height: 1.25rem;
+  --label-large-size: 0.875rem;
+  --label-large-tracking: 0.00625rem;
+  --label-large-weight: 500;
+
+  --label-medium-line-height: 1rem;
+  --label-medium-size: 0.75rem;
+  --label-medium-tracking: 0.03125rem;
+  --label-medium-weight: 500;
+
+  --label-small-line-height: 0.875rem;
+  --label-small-size: 0.6875rem;
+  --label-small-tracking: 0.03125rem;
+  --label-small-weight: 500;
+
+  --body-large-line-height: 1.5rem;
+  --body-large-size: 1rem;
+  --body-large-tracking: 0.009375rem;
+  --body-large-weight: 400;
+
+  --body-medium-line-height: 1.25rem;
+  --body-medium-size: 0.875rem;
+  --body-medium-tracking: 0.015625rem;
+  --body-medium-weight: 400;
+
+  --body-small-line-height: 1rem;
+  --body-small-size: 0.75rem;
+  --body-small-tracking: 0.025rem;
+  --body-small-weight: 400;
+}
+
+/* Typography classes */
+.display-large {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--display-large-line-height);
+  font-size: var(--display-large-size);
+  letter-spacing: var(--display-large-tracking);
+  font-weight: var(--display-large-weight);
+}
+
+.display-medium {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--display-medium-line-height);
+  font-size: var(--display-medium-size);
+  letter-spacing: var(--display-medium-tracking);
+  font-weight: var(--display-medium-weight);
+}
+
+.display-small {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--display-small-line-height);
+  font-size: var(--display-small-size);
+  letter-spacing: var(--display-small-tracking);
+  font-weight: var(--display-small-weight);
+}
+
+.headline-large {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--headline-large-line-height);
+  font-size: var(--headline-large-size);
+  letter-spacing: var(--headline-large-tracking);
+  font-weight: var(--headline-large-weight);
+}
+
+.headline-medium {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--headline-medium-line-height);
+  font-size: var(--headline-medium-size);
+  letter-spacing: var(--headline-medium-tracking);
+  font-weight: var(--headline-medium-weight);
+}
+
+.headline-small {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--headline-small-line-height);
+  font-size: var(--headline-small-size);
+  letter-spacing: var(--headline-small-tracking);
+  font-weight: var(--headline-small-weight);
+}
+
+.title-large {
+  font-family: "Libre Caslon Text", system-ui, Arial, sans-serif;
+  line-height: var(--title-large-line-height);
+  font-size: var(--title-large-size);
+  letter-spacing: var(--title-large-tracking);
+  font-weight: var(--title-large-weight);
+}
+
+.title-medium {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--title-medium-line-height);
+  font-size: var(--title-medium-size);
+  letter-spacing: var(--title-medium-tracking);
+  font-weight: var(--title-medium-weight);
+}
+
+.title-small {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--title-small-line-height);
+  font-size: var(--title-small-size);
+  letter-spacing: var(--title-small-tracking);
+  font-weight: var(--title-small-weight);
+}
+
+.label-large-prominent {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--label-large-line-height);
+  font-size: var(--label-large-size);
+  letter-spacing: var(--label-large-tracking);
+  font-weight: 600;
+}
+
+.label-large {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--label-large-line-height);
+  font-size: var(--label-large-size);
+  letter-spacing: var(--label-large-tracking);
+  font-weight: var(--label-large-weight);
+}
+
+.label-medium-prominent {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--label-medium-line-height);
+  font-size: var(--label-medium-size);
+  letter-spacing: var(--label-medium-tracking);
+  font-weight: 600;
+}
+
+.label-medium {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--label-medium-line-height);
+  font-size: var(--label-medium-size);
+  letter-spacing: var(--label-medium-tracking);
+  font-weight: var(--label-medium-weight);
+}
+
+.label-small {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--label-small-line-height);
+  font-size: var(--label-small-size);
+  letter-spacing: var(--label-small-tracking);
+  font-weight: var(--label-small-weight);
+}
+
+.body-large {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--body-large-line-height);
+  font-size: var(--body-large-size);
+  letter-spacing: var(--body-large-tracking);
+  font-weight: var(--body-large-weight);
+}
+
+.body-medium {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--body-medium-line-height);
+  font-size: var(--body-medium-size);
+  letter-spacing: var(--body-medium-tracking);
+  font-weight: var(--body-medium-weight);
+}
+
+.body-small {
+  font-family: "EB Garamond", system-ui, Arial, serif;
+  line-height: var(--body-small-line-height);
+  font-size: var(--body-small-size);
+  letter-spacing: var(--body-small-tracking);
+  font-weight: var(--body-small-weight);
+}
