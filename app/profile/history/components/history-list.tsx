@@ -16,9 +16,8 @@ export default function HistoryList() {
   const { histories, updateHistories } = React.useContext(HistoryContext);
 
   const { data, error, isLoading } = useSWR(
-    // `/api/history?id=${user?.userId}`,
-    `/api/history?id=1`,
-    fetcher,
+    `/api/history?id=${user?.userId}`,
+    fetcher
   );
 
   React.useEffect(() => {
