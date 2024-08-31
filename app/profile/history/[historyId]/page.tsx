@@ -5,26 +5,23 @@ import styles from "../history.module.scss";
 import Image from "next/image";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
+import Box from "@mui/material/Box";
 
-import { toTitleCase } from "../../_utils/text-formatter";
+import { toTitleCase } from "../../../_utils/text-formatter";
 import { HistoryContext } from "@/app/lib/context/history-provider";
 
 export default async function HistoryDetails() {
   const historyContext = useContext(HistoryContext);
 
   if (historyContext.currentHistories === undefined) {
-    return (
-      <div className={styles.historyContainer}>
-        <h1 className={`title-large ${styles.title}`}>No history found</h1>
-      </div>
-    );
+    return <h1 className={`title-large ${styles.title}`}>No history found</h1>;
   }
 
   return (
-    <div className={styles.historyContainer}>
+    <Box display="flex" flexDirection="column" alignItems="center">
       <Stack
         maxWidth="md"
-        sx={{ width: "100%", mt: 2, mb: 4 }}
+        sx={{ width: "96%", mt: 2, mb: 4 }}
         className={styles.header}
       >
         <Stack
@@ -59,7 +56,7 @@ export default async function HistoryDetails() {
         direction="row"
         justifyContent="space-between"
         maxWidth="md"
-        sx={{ width: "100%", mt: 1, mb: 4 }}
+        sx={{ width: "96%", mt: 1, mb: 4 }}
         alignItems="baseline"
         className={styles.summary}
       >
@@ -69,11 +66,13 @@ export default async function HistoryDetails() {
       </Stack>
 
       <div className={styles.cardContainer} style={{ padding: 0 }}>
-        {historyContext.currentHistories?.cards.map((card, index) => (
-          <Card key={index} card={card} />
-        ))}
+        {historyContext.currentHistories?.cards.map(
+          (card: { position: string; description: string }, index: number) => (
+            <Card key={index} card={card} />
+          )
+        )}
       </div>
-    </div>
+    </Box>
   );
 }
 
@@ -89,10 +88,8 @@ const Card = ({
           <Image
             src={`/cards/${card.description.split("-")[0].trimEnd()}.jpg`}
             alt={card.description.split("-")[0].trimEnd()}
-            fill={true}
-            sizes="(max-width: 768px) 100vw, 
-                   (max-width: 1200px) 50vw, 
-                   33vw"
+            width={188}
+            height={272}
           />
         </div>
         <div className={styles.flipCardBack}>

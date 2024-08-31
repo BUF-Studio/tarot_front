@@ -1,6 +1,6 @@
 "use client";
 
-import { HistoryContextProvider } from "../lib/context/history-provider";
+import { HistoryContextProvider } from "../../lib/context/history-provider";
 export default function HistoryLayout({
   children,
 }: {

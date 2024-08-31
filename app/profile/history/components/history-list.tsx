@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import useSWR from "swr";
 import Container from "@mui/material/Container";
 import HistoryCard from "./history-card";
@@ -13,14 +13,15 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function HistoryList() {
   const user = useAuthUser();
-  const { histories, updateHistories } = useContext(HistoryContext);
+  const { histories, updateHistories } = React.useContext(HistoryContext);
 
   const { data, error, isLoading } = useSWR(
-    `/api/history?id=${user?.userId}`,
+    // `/api/history?id=${user?.userId}`,
+    `/api/history?id=1`,
     fetcher,
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (data && Array.isArray(data.data)) {
       updateHistories(data.data);
     }

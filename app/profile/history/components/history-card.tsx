@@ -21,10 +21,8 @@ const HistoryCard = ({ session }: { session: Session }) => {
     <ButtonBase
       sx={{ mb: 1, borderRadius: 4 }}
       onClick={() => {
-        console.log("Clicked");
         historyContext.updateCurrentHistories(session);
-        console.log("Session", session);
-        router.push(`/history/${session.session_id}`);
+        router.push(`/profile/history/${session.session_id}`);
       }}
     >
       <Box className={styles.sessionContainer}>
@@ -43,21 +41,18 @@ const HistoryCard = ({ session }: { session: Session }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <h1 className={`title-large`}>{toTitleCase(session.question)}</h1>
+              <h1 className={`title-large`} style={{ textAlign: "left" }}>
+                {toTitleCase(session.question)}
+              </h1>
               <p className={`label-large ${styles.subtitle}`}>
                 {toTitleCase(session.stage)}
               </p>
             </Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              mt={0.5}
-            >
+            <Box mt={0.5}>
               <p className={`body-large ${styles.ellipsisText}`}>
                 {session.summary}
               </p>
-            </Stack>
+            </Box>
           </Container>
         </Stack>
       </Box>
