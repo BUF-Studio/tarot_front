@@ -29,8 +29,8 @@ export default async function History() {
           height={64}
           className={styles.logo}
         />
-        <Link href={"/"}>
-          <IconButton aria-label="Go to home" edge="end">
+        <Link href={"/profile"}>
+          <IconButton aria-label="Go back profile" edge="end">
             <CloseRoundedIcon />
           </IconButton>
         </Link>
