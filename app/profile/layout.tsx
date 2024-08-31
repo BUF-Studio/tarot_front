@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import Box from "@mui/material/Box";
+import BackButton from "../components/back-button";
 
 export default function ProfileLayout({
   children,
@@ -22,17 +23,8 @@ export default function ProfileLayout({
         maxWidth="md"
         sx={{ width: "100%", my: 2, pr: { xs: 2 } }}
       >
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          width={64}
-          height={64}
-        />
-        <Link href={"/"}>
-          <IconButton aria-label="Go to home" edge="end">
-            <CloseRoundedIcon />
-          </IconButton>
-        </Link>
+        <Image src="/logo.png" alt="Logo" width={64} height={64} />
+        <BackButton />
       </Stack>
       {children}
     </Box>
