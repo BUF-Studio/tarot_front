@@ -65,13 +65,12 @@ export async function middleware(request: NextRequest) {
       }
     } catch (error) {
       console.error("Error checking user registration:", error);
-      // If there's an error, redirect to error page
+      // If there's an error (including connection errors), redirect to error page
       return NextResponse.redirect(new URL("/error", request.url));
     }
   } else {
     // If user is not authenticated and tries to access a protected route, redirect to signin
     if (!isPublicRoute) {
-      console.log("Trigger here")
       return NextResponse.redirect(new URL("/signin", request.url));
     }
   }
