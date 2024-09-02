@@ -1,30 +1,29 @@
-import { authConfig } from "@/app/amplify-cognito-config";
-import { type NextServer, createServerRunner } from "@aws-amplify/adapter-nextjs";
+import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth/server";
+import { cookies } from "next/headers";
 
-export const {runWithAmplifyServerContext} = createServerRunner({
+import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
+import { serverAuthConfig } from "../amplify-server-cognito-configuration";
+
+export const { runWithAmplifyServerContext } = createServerRunner({
   config: {
-    Auth: authConfig,
+    Auth: serverAuthConfig,
   },
 });
 
-export async function authenticatedUser(context: NextServer.Context) {
-  return await runWithAmplifyServerContext({
-    nextServerContext: context,
-    operation: async (contextSpec) => {
-      try {
-        const session = await fetchAuthSession(contextSpec);
-        if (!session.tokens) {
-          return;
-        }
-        const user = {
-            ...(await getCurrentUser(contextSpec)),
-        }
+export const cookiesClient = generateServerClientUsingCookies({
+  config: { Auth: serverAuthConfig },
+  cookies,
+});
 
-        return user;
-      } catch (error) {
-        console.error("Error fetching authenticated user", error);
-      }
-    },
-  });
+export async function authenticatedUser() {
+  try {
+    const currentUser = await runWithAmplifyServerContext({
+      nextServerContext: { cookies },
+      operation: (contextSpec) => getCurrentUser(contextSpec),
+    });
+    return currentUser;
+  } catch (error) {
+    console.error(error);
+  }
 }

@@ -1,53 +1,41 @@
-"use client";
-
+import { redirect } from 'next/navigation';
 import styles from "@/app/landing.module.scss";
-import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
 import PictureMarquee from "@/app/components/card-marquee";
-import SubscriptionSection from "@/app/components/subscription-section";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
-import useSWR from "swr";
-
-import { useEffect } from "react";
-import { handleSignOut } from "@/app/lib/aws/cognito";
-import { useAuthUser } from "@/app/_hooks/use-auth-user";
-import { useRouter } from "next/navigation";
 import { toTitleCase } from "@/app/_utils/text-formatter";
-import { useUser } from "./lib/context/user-provider";
 import { Person } from "@mui/icons-material";
-import PlanInfoCard from "./components/plan-info-card";
+// import PlanInfoCard from "./components/plan-info-card";
+import { authenticatedUser } from "./_utils/amplify-server-utils";
+import { User } from "@/app/lib/definition";
+import PlanInfoCard from './components/plan-info-card';
+import SubscriptionSection from './components/subscription-section';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+async function getData(userId: string): Promise<User> {
+  const res = await fetch(`http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(userId)}`, { cache: 'no-store' });
+  
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+ 
+  return res.json();
+}
 
-export default function Home() {
-  const router = useRouter();
-  const authUser = useAuthUser();
-  const { user, setUser } = useUser();
+export default async function Home() {
+  const user = await authenticatedUser();
 
-  const { data, error, isLoading } = useSWR(
-    `/api/user?userId=${authUser?.userId}`,
-    fetcher
-  );
+  if (!user) {
+    redirect('/signin');
+  }
 
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-      setUser(data.data);
-    }
-  }, [data, setUser]);
-
-  if (error) return <div className={`body-large`}>Failed to load</div>;
-  if (isLoading) return <div className={`body-large`}>Loading...</div>;
-
-  const handleUserSignOut = async () => {
-    await handleSignOut();
-    router.push("/signin");
-  };
-
-  const navigateToPayment = (plan: string) => {
-    router.push(`/payment?plan=${plan}`);
-  };
+  let userData;
+  try {
+    userData = await getData(user.userId);
+    console.log('User data:', userData);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
 
   return (
     <>
@@ -55,9 +43,11 @@ export default function Home() {
         <section className={styles.welcomeSection}>
           <PictureMarquee />
           <h1 className={`display-medium`}>
-            Welcome {toTitleCase(user?.name)}!
+            Welcome {toTitleCase(userData?.name)}!
           </h1>
-          <PlanInfoCard usage={user?.usage} subscription_type={user?.subscription_type} />
+          {userData && (
+            <PlanInfoCard usage={userData.usage} subscription_type={userData.subscription_type} />
+          )}
           <Stack spacing={1} direction="row">
             <Link href={"/profile"}>
               <Button
@@ -65,13 +55,13 @@ export default function Home() {
                 className={styles.button}
                 startIcon={<Person />}
               >
-                {user?.name}
+                {userData?.name || 'Profile'}
               </Button>
             </Link>
           </Stack>
         </section>
       </div>
-      <SubscriptionSection />
+      <SubscriptionSection currentUserSubscription={userData?.subscription_type} />
     </>
   );
 }

@@ -1,8 +1,30 @@
-type User = {
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+  PreferNotToSay = 'Prefer not to say'
+}
+
+export enum Model {
+  GPT4O = 'gpt-4o',
+  GPT4OMini = 'gpt-4o-mini',
+  Llama31 = 'llama3.1'
+}
+
+export enum SubscriptionType {
+  Free = 'free',
+  Premium = 'premium'
+}
+
+export type User = {
   id: string;
-  username: string;
+  name: string;
   email: string;
   phone_number: string;
-  age: number;
-  gender: string;
+  age?: number;
+  gender?: Gender;
+  model: Model;
+  subscription_type: SubscriptionType;
+  subscription_start?: Date;
+  subscription_end?: Date;
+  usage: number
 };

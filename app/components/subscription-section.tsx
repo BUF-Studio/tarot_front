@@ -1,13 +1,16 @@
 import React from "react";
 import styles from "@/app/landing.module.scss";
 import Button from "@mui/material/Button";
-import { useRouter } from "next/navigation";
-import { SubscriptionType, useUser } from "../lib/context/user-provider";
+import Link from "next/link";
+import { SubscriptionType } from "@/app/lib/definition";
 
-const SubscriptionSection = () => {
-  const router = useRouter();
-  const { user } = useUser();
+interface SubscriptionSectionProps {
+  currentUserSubscription?: SubscriptionType;
+}
 
+const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
+  currentUserSubscription,
+}) => {
   const plans = [
     {
       type: SubscriptionType.Free,
@@ -22,28 +25,24 @@ const SubscriptionSection = () => {
       title: "Paid Plan",
       desc: "For enthusiasts seeking deeper insights",
       price: "RM 19 / month",
-      features: ["Unlimited AI-powered readings"],
-      btnText: "Choose Standard",
+      features: ["Unlimited AI-powered readings", "Upgraded AI models"],
+      btnText: "Upgrade Now",
     },
   ];
 
-  const navigateToPayment = (plan: SubscriptionType) => {
-    router.push(`/payment?plan=${plan.toLowerCase()}`);
-  };
-
-  const getButtonText = (plan: typeof plans[0]): string => {
-    if (!user) {
+  const getButtonText = (plan: (typeof plans)[0]): string => {
+    if (!currentUserSubscription) {
       return plan.btnText;
     }
 
-    if (user.subscription_type === plan.type) {
+    if (currentUserSubscription === plan.type) {
       return "Current Plan";
     }
 
     return plan.btnText;
   };
 
-  const renderPlan = (plan: typeof plans[0]) => (
+  const renderPlan = (plan: (typeof plans)[0]) => (
     <div key={plan.type} className={styles.planCard}>
       <h3 className={`${styles.planTitle} title-large`}>{plan.title}</h3>
       <h4 className={`${styles.planDesc} title-medium`}>{plan.desc}</h4>
@@ -55,20 +54,23 @@ const SubscriptionSection = () => {
         ))}
       </ul>
       <p className={`${styles.planPrice} headline-small`}>{plan.price}</p>
-      <Button
-        variant="contained"
-        className={styles.planButton}
-        onClick={() => navigateToPayment(plan.type)}
-        disabled={user?.subscription_type === plan.type}
-      >
-        {getButtonText(plan)}
-      </Button>
+      <Link href={`/payment?plan=${plan.type}`} passHref>
+        <Button
+          variant="contained"
+          className={styles.planButton}
+          disabled={currentUserSubscription === plan.type}
+        >
+          {getButtonText(plan)}
+        </Button>
+      </Link>
     </div>
   );
 
   return (
     <section className={styles.tarotMateSection}>
-      <h2 className={`${styles.tarotMateTitle} display-medium`}>TarotMate</h2>
+      <h2 className={`${styles.tarotMateTitle} display-medium`}>
+        TarotMate {currentUserSubscription}
+      </h2>
       <p className={`${styles.tarotMateSubtitle} title-medium`}>
         Your personal AI-Powered Tarot Reading Companion
       </p>

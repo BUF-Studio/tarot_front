@@ -1,3 +1,5 @@
+"use client"
+
 import styles from "@/app/landing.module.scss";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";

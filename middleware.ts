@@ -43,7 +43,7 @@ async function checkUserRegistration(userId: string) {
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const user = await authenticatedUser({ request, response });
+  const user = await authenticatedUser();
 
   const { pathname } = request.nextUrl;
 
