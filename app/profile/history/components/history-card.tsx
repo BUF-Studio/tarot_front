@@ -5,7 +5,8 @@ import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Link from "next/link";
 import ButtonBase from "@mui/material/ButtonBase";
-import Logo from "@/app/components/logo";
+import Logo from "@/public/logo.png";
+import Image from "next/image";
 
 import { toTitleCase } from "@/app/_utils/text-formatter";
 import { Session } from "../session-interface";
@@ -20,7 +21,7 @@ const HistoryCard = ({ session }: { session: Session }) => {
       <ButtonBase sx={{ mb: 2, borderRadius: 4 }}>
         <Box className={styles.sessionContainer}>
           <Stack direction="row" alignItems="center">
-            <Logo />
+            <Image src={Logo} alt="logo" height={64} />
             <Container style={{ paddingRight: 0 }}>
               <Stack
                 direction="row"
