@@ -241,11 +241,9 @@
 
 .pictureCard {
   width: 30vh;
-
-  margin-bottom: 2rem;
-  // background-color: var(--color-background);
+  margin: 2rem 0;
   perspective: 1000px;
-  overflow: hidden;
+  // overflow: hidden;
 
   .animated {
     will-change: transform;

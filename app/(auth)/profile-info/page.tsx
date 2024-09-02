@@ -1,16 +1,18 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import type React from "react";
-import { useEffect, useState } from "react";
+
+import React from "react";
 import styles from "./signup.module.scss";
-import Image from "next/image";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import { Alert, MenuItem, Select, Snackbar, TextField } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import Logo from "@/app/components/logo";
+
+import { useRouter } from "next/navigation";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
@@ -61,13 +63,7 @@ const SignUp = () => {
     <div className={styles.loginContainer}>
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={64}
-            height={64}
-            className={styles.loginLogo}
-          />
+          <Logo />
           <h1 className={`headline-large ${styles.title}`}>
             Profile Information
           </h1>

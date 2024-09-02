@@ -1,32 +1,32 @@
 "use client";
 
-import type React from "react";
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "./forgotPassword.module.scss";
-import Image from "next/image";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Snackbar from "@mui/material/Snackbar";
-import {
-  Alert,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  OutlinedInput,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import Check from "@mui/icons-material/Check";
+import Close from "@mui/icons-material/Close";
+import Logo from "@/app/components/logo";
+
+import { useRouter } from "next/navigation";
 import {
   handleConfirmResetPassword,
   handleResetPassword,
 } from "@/app/lib/aws/cognito";
-import { MdVisibilityOff, MdVisibility } from "react-icons/md";
-import { Check, Close } from "@mui/icons-material";
 
 const ForgotPassword = () => {
   const router = useRouter();
@@ -137,10 +137,10 @@ const ForgotPassword = () => {
       password
     );
     if (success) {
-      setSnackbar({ open: true, message: message, severity: "success" });
-        router.push("/signin");
+      if (message) setSnackbar({ open: true, message, severity: "success" });
+      router.push("/signin");
     } else {
-      setSnackbar({ open: true, message, severity: "error" });
+      if (message) setSnackbar({ open: true, message, severity: "error" });
       return;
     }
   };
@@ -170,9 +170,9 @@ const ForgotPassword = () => {
 
     const { success, message } = await handleResetPassword(email);
     if (success) {
-      setSnackbar({ open: true, message: message, severity: "success" });
+      if (message) setSnackbar({ open: true, message, severity: "success" });
     } else {
-      setSnackbar({ open: true, message, severity: "error" });
+      if (message) setSnackbar({ open: true, message, severity: "error" });
     }
   };
 
@@ -221,13 +221,7 @@ const ForgotPassword = () => {
       </Snackbar>
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={64}
-            height={64}
-            className={styles.loginLogo}
-          />
+          <Logo />
           <h1 className={`headline-large ${styles.title}`}>Forgot Password</h1>
           <p className={`body-large ${styles.subtitle}`}>
             Enter your registered email address to reset your password
@@ -286,7 +280,11 @@ const ForgotPassword = () => {
                     onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >
-                    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    {showPassword ? (
+                      <VisibilityOffRoundedIcon />
+                    ) : (
+                      <VisibilityRoundedIcon />
+                    )}
                   </IconButton>
                 </InputAdornment>
               }
@@ -309,7 +307,11 @@ const ForgotPassword = () => {
                     onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >
-                    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    {showPassword ? (
+                      <VisibilityOffRoundedIcon />
+                    ) : (
+                      <VisibilityRoundedIcon />
+                    )}
                   </IconButton>
                 </InputAdornment>
               }

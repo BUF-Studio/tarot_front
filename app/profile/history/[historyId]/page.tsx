@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useContext } from "react";
+import React from "react";
 import styles from "../history.module.scss";
 import Image from "next/image";
 import Stack from "@mui/material/Stack";
@@ -8,14 +6,28 @@ import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
 
 import { toTitleCase } from "../../../_utils/text-formatter";
-import { HistoryContext } from "@/app/lib/context/history-provider";
 
-export default async function HistoryDetails() {
-  const historyContext = useContext(HistoryContext);
+export default async function HistoryDetails({
+  params,
+}: {
+  params: { historyId: string };
+}) {
+  const id = params.historyId;
 
-  if (historyContext.currentHistories === undefined) {
-    return <h1 className={`title-large ${styles.title}`}>No history found</h1>;
+  const response = await fetch(
+    `http://${process.env.BACKEND_URL}/userSessions/${id}`
+  );
+
+  if (!response.ok) {
+    console.log("Response error:", response);
+    return (
+      <p className="body-large" style={{ textAlign: "center" }}>
+        Failed to load
+      </p>
+    );
   }
+
+  const historyData = await response.json();
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -32,7 +44,7 @@ export default async function HistoryDetails() {
           sx={{ width: "100%" }}
         >
           <h1 className={`title-large ${styles.title}`}>
-            {toTitleCase(historyContext.currentHistories?.question ?? "")}
+            {toTitleCase(historyData.question ?? "")}
           </h1>
         </Stack>
         <Stack
@@ -43,13 +55,9 @@ export default async function HistoryDetails() {
           alignItems="baseline"
         >
           <h1 className={`title-medium ${styles.title}`}>
-            {new Date(
-              historyContext.currentHistories?.session_created ?? ""
-            ).toUTCString()}
+            {new Date(historyData.session_created ?? "").toUTCString()}
           </h1>
-          <Chip
-            label={toTitleCase(historyContext.currentHistories?.stage ?? "")}
-          />
+          <Chip label={toTitleCase(historyData.stage ?? "")} />
         </Stack>
       </Stack>
       <Stack
@@ -60,13 +68,11 @@ export default async function HistoryDetails() {
         alignItems="baseline"
         className={styles.summary}
       >
-        <h1 className={`body-large`}>
-          {historyContext.currentHistories?.summary ?? ""}
-        </h1>
+        <h1 className={`body-large`}>{historyData.summary ?? ""}</h1>
       </Stack>
 
       <div className={styles.cardContainer} style={{ padding: 0 }}>
-        {historyContext.currentHistories?.cards.map(
+        {historyData.cards.map(
           (card: { position: string; description: string }, index: number) => (
             <Card key={index} card={card} />
           )
@@ -94,8 +100,8 @@ const Card = ({
         </div>
         <div className={styles.flipCardBack}>
           <div className={styles.flipCardInnerBack}>
-            <h1 className={`title-medium`}>{card.position}</h1>
-            <p className={`body-medium`}>{card.description.split("-")[1]}</p>
+            <h1 className={`title-small`}>{card.position}</h1>
+            <p className={`body-small`}>{card.description.split("-")[1]}</p>
           </div>
         </div>
       </div>

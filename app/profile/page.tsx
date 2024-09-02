@@ -8,13 +8,12 @@ import Face6RoundedIcon from "@mui/icons-material/Face6Rounded";
 import FemaleRoundedIcon from "@mui/icons-material/FemaleRounded";
 import MaleRoundedIcon from "@mui/icons-material/MaleRounded";
 import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
+import LogoutButton from "./components/logout-button";
+import Link from "next/link";
 
 import { Gender, User } from "@/app/lib/definition";
 import { authenticatedUser } from "../_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@mui/material";
-import LogoutButton from "./LogoutButton";
 
 async function getData(userId: string): Promise<User> {
   const res = await fetch(
@@ -76,13 +75,13 @@ export default async function ProfilePage() {
         </Stack>
       </Stack>
       <Divider />
-      <Link href="/profile/model" passHref>
+      <Link href="/profile/model" passHref legacyBehavior>
         <ListButton title="Subscription Model" />
       </Link>
-      <Link href="/profile/history" passHref>
+      <Link href="/profile/history" passHref legacyBehavior>
         <ListButton title="History" />
       </Link>
-      <Link href="/profile/edit" passHref>
+      <Link href="/profile/edit" passHref legacyBehavior>
         <ListButton title="Edit Profile" />
       </Link>
       <LogoutButton />

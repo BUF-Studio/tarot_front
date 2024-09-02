@@ -1,20 +1,17 @@
 "use client";
 
-import type React from "react";
-import { type FormEvent, useState, useEffect } from "react";
+import React, { type FormEvent, useState, useEffect } from "react";
 import styles from "./confirmSignUp.module.scss";
-import Image from "next/image";
 import Button from "@mui/material/Button";
+import Logo from "@/app/components/logo";
 import TextField from "@mui/material/TextField";
+import SignupTimeline from "@/app/components/signup-timeline";
+
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  handleConfirmSignUp,
-  // handleSendEmailVerificationCode,
-} from "@/app/lib/aws/handleConfirmSignUp";
+import { handleConfirmSignUp } from "@/app/lib/aws/handleConfirmSignUp";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
-import SignupTimeline from "@/app/components/signup-timeline";
 
 const ConfirmSignUp = () => {
   const router = useRouter();
@@ -95,13 +92,7 @@ const ConfirmSignUp = () => {
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
           <div>
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={64}
-              height={64}
-              className={styles.loginLogo}
-            />
+            <Logo />
             <h1 className={`headline-large ${styles.title}`}>
               Verify Your Email
             </h1>

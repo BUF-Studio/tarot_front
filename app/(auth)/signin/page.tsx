@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import React from "react";
 import styles from "./signin.module.scss";
-import Image from "next/image";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
@@ -13,12 +10,12 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import {
-  handleGetCurrentUser,
-  handleSignIn,
-  handleSignOut,
-} from "../../lib/aws/cognito";
-import { Alert, Snackbar } from "@mui/material";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import Logo from "@/app/components/logo";
+
+import { useRouter } from "next/navigation";
+import { handleSignIn } from "../../lib/aws/cognito";
 import { useSnackbar } from "@/app/components/SnackbarContext";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 
@@ -58,13 +55,7 @@ const SignIn = () => {
     <div className={styles.loginContainer}>
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={64}
-            height={64}
-            className={styles.loginLogo}
-          />
+          <Logo />
           <h1 className={`headline-large ${styles.title}`}>Sign In</h1>
           <p className={`body-large ${styles.subtitle}`}>
             By signing in, you agree to our terms and conditions
@@ -94,7 +85,11 @@ const SignIn = () => {
                     onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >
-                    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    {showPassword ? (
+                      <VisibilityOffRoundedIcon />
+                    ) : (
+                      <VisibilityRoundedIcon />
+                    )}
                   </IconButton>
                 </InputAdornment>
               }

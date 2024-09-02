@@ -1,16 +1,16 @@
-import { redirect } from 'next/navigation';
 import styles from "@/app/landing.module.scss";
 import Button from "@mui/material/Button";
 import PictureMarquee from "@/app/components/card-marquee";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
-import { toTitleCase } from "@/app/_utils/text-formatter";
-import { Person } from "@mui/icons-material";
-// import PlanInfoCard from "./components/plan-info-card";
-import { authenticatedUser } from "./_utils/amplify-server-utils";
-import { User } from "@/app/lib/definition";
 import PlanInfoCard from './components/plan-info-card';
 import SubscriptionSection from './components/subscription-section';
+
+import { toTitleCase } from "@/app/_utils/text-formatter";
+import { Person } from "@mui/icons-material";
+import { authenticatedUser } from "./_utils/amplify-server-utils";
+import { User } from "@/app/lib/definition";
+import { redirect } from 'next/navigation';
 
 async function getData(userId: string): Promise<User> {
   const res = await fetch(`http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(userId)}`, { cache: 'no-store' });

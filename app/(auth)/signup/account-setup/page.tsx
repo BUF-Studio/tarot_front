@@ -11,11 +11,13 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import SignupTimeline from "@/app/components/signup-timeline";
 
-import { MdVisibilityOff, MdVisibility } from "react-icons/md";
 import { handleSignUp } from "@/app/lib/aws/cognito";
 import { useSnackbar } from "@/app/components/SnackbarContext";
-import SignupTimeline from "@/app/components/signup-timeline";
+import Logo from "@/app/components/logo";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -56,13 +58,7 @@ const SignUp = () => {
       <div className={styles.loginForm}>
         <div className={styles.loginHeader}>
           <div>
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={64}
-              height={64}
-              className={styles.loginLogo}
-            />
+            <Logo />
             <h1 className={`headline-large ${styles.title}`}>Create Account</h1>
             <p className={`body-large ${styles.subtitle}`}>
               By signing up, you agree to our terms and conditions
@@ -95,7 +91,11 @@ const SignUp = () => {
                     onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >
-                    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                    {showPassword ? (
+                      <VisibilityOffRoundedIcon />
+                    ) : (
+                      <VisibilityRoundedIcon />
+                    )}
                   </IconButton>
                 </InputAdornment>
               }
@@ -118,9 +118,9 @@ const SignUp = () => {
                     edge="end"
                   >
                     {showConfirmPassword ? (
-                      <MdVisibilityOff />
+                      <VisibilityOffRoundedIcon />
                     ) : (
-                      <MdVisibility />
+                      <VisibilityRoundedIcon />
                     )}
                   </IconButton>
                 </InputAdornment>
