@@ -14,6 +14,7 @@ import { authenticatedUser } from "../_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@mui/material";
+import LogoutButton from "./LogoutButton";
 
 async function getData(userId: string): Promise<User> {
   const res = await fetch(
@@ -84,13 +85,7 @@ export default async function ProfilePage() {
       <Link href="/profile/edit" passHref>
         <ListButton title="Edit Profile" />
       </Link>
-      {/* <ListButton
-        title="Log Out"
-        onClick={() => {
-          confirm("Are you sure you want to log out?");
-          // TODO logout
-        }}
-      /> */}
+      <LogoutButton />
     </Container>
   );
 }
