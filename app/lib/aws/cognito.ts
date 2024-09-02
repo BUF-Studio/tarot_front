@@ -15,7 +15,7 @@ import {
 } from "aws-amplify/auth";
 import { SignupSchema } from "@/app/_utils/validation";
 import { redirect } from "next/navigation";
-import { handleSignUpStep } from "./signUpUtils";
+import { handleSignUpStep } from "./signup-utils";
 
 type AuthResult = {
   success: boolean;

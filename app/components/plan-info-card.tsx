@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, LinearProgress } from "@mui/material";
 import styles from "@/app/landing.module.scss";
-import { SubscriptionType } from "@/app/lib/definition";
 import Link from "next/link";
+
+import { Button, LinearProgress } from "@mui/material";
+import { SubscriptionType } from "@/app/lib/definition";
 
 interface PlanInfoCardProps {
   usage?: number;
@@ -25,7 +26,7 @@ const PlanInfoCard: React.FC<PlanInfoCardProps> = ({
 
   return (
     <div className={styles.planInfoContainer}>
-    <div className={styles.planInfo}>
+      <div className={styles.planInfo}>
         <div className={styles.planDetails}>
           <span className={`${styles.plan} headline-medium`}>
             {`${toTitleCase(subscription_type)} Plan`}
@@ -44,10 +45,7 @@ const PlanInfoCard: React.FC<PlanInfoCardProps> = ({
           />
           {isFree && (
             <Link href="/payment?plan=premium" passHref>
-              <Button
-                variant="contained"
-                className={styles.button}
-              >
+              <Button variant="contained" className={styles.button}>
                 Upgrade Plan
               </Button>
             </Link>

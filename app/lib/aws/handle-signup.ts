@@ -1,5 +1,5 @@
 import { signUp } from "aws-amplify/auth/cognito";
-import { handleSignUpStep } from "./signUpUtils";
+import { handleSignUpStep } from "./signup-utils";
 
 export async function handleSignUp(formData: FormData) {
   try {

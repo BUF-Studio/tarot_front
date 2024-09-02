@@ -7,19 +7,19 @@ import Typography from "@mui/material/Typography";
 
 interface ListButtonProps {
   title: string;
-  onClick?: () => void;  // Made onClick optional
+  onClick?: () => void; 
 }
 
 export default function ListButton({ title, onClick }: ListButtonProps) {
   return (
     <ButtonBase
-      onClick={onClick}  // ButtonBase handles undefined onClick gracefully
+      onClick={onClick} 
       sx={{
         width: "100%",
         justifyContent: "space-between",
         borderRadius: 1,
         overflow: "hidden",
-        cursor: onClick ? "pointer" : "default",  // Adjust cursor based on onClick presence
+        cursor: onClick ? "pointer" : "default", 
         p: 2,
       }}
     >

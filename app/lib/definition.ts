@@ -1,18 +1,18 @@
 export enum Gender {
-  Male = 'Male',
-  Female = 'Female',
-  PreferNotToSay = 'Prefer not to say'
+  Male = "Male",
+  Female = "Female",
+  PreferNotToSay = "Prefer not to say",
 }
 
 export enum Model {
-  GPT4O = 'gpt-4o',
-  GPT4OMini = 'gpt-4o-mini',
-  Llama31 = 'llama3.1'
+  GPT4O = "gpt-4o",
+  GPT4OMini = "gpt-4o-mini",
+  Llama31 = "llama3.1",
 }
 
 export enum SubscriptionType {
-  Free = 'free',
-  Premium = 'premium'
+  Free = "free",
+  Premium = "premium",
 }
 
 export type User = {
@@ -26,5 +26,14 @@ export type User = {
   subscription_type: SubscriptionType;
   subscription_start?: Date;
   subscription_end?: Date;
-  usage: number
+  usage: number;
+};
+
+export type Session = {
+  cards: { position: string; description: string }[];
+  session_id: string;
+  question: string;
+  session_created: string;
+  stage: string;
+  summary: string;
 };

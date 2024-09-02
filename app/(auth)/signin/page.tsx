@@ -16,8 +16,8 @@ import Logo from "@/app/components/logo";
 
 import { useRouter } from "next/navigation";
 import { handleSignIn } from "../../lib/aws/cognito";
-import { useSnackbar } from "@/app/components/SnackbarContext";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
+import { useSnackbar } from "@/app/lib/context/snackbar-context";
 
 const SignIn = () => {
   const router = useRouter();

@@ -1,7 +1,6 @@
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
-import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth/server";
+import { getCurrentUser } from "aws-amplify/auth/server";
 import { cookies } from "next/headers";
-
 import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
 import { serverAuthConfig } from "../amplify-server-cognito-configuration";
 

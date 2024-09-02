@@ -3,9 +3,9 @@ import Divider from "@mui/material/Divider";
 import HistoryCard from "./components/history-card";
 import Search from "@/app/components/search";
 
-import { Session } from "./session-interface";
 import { authenticatedUser } from "@/app/_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
+import { Session } from "@/app/lib/definition";
 
 export default async function History({
   searchParams,

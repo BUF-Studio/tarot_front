@@ -1,6 +1,6 @@
 "use client";
 
-import { SnackbarProvider } from "../components/SnackbarContext";
+import { SnackbarProvider } from "../lib/context/snackbar-context";
 export default function AuthLayout({
   children,
 }: {

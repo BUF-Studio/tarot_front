@@ -6,6 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+
 import { authenticatedUser } from "@/app/_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
 import { Model, User } from "@/app/lib/definition";

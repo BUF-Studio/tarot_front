@@ -14,8 +14,8 @@ import Logo from "@/app/components/logo";
 
 import { useRouter } from "next/navigation";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
-import { useSnackbar } from "@/app/components/SnackbarContext";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
+import { useSnackbar } from "@/app/lib/context/snackbar-context";
 
 const SignUp = () => {
   const router = useRouter();

@@ -2,7 +2,6 @@
 
 import React from "react";
 import styles from "./signup.module.scss";
-import Image from "next/image";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
@@ -14,10 +13,10 @@ import IconButton from "@mui/material/IconButton";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import SignupTimeline from "@/app/components/signup-timeline";
+import Logo from "@/app/components/logo";
 
 import { handleSignUp } from "@/app/lib/aws/cognito";
-import { useSnackbar } from "@/app/components/SnackbarContext";
-import Logo from "@/app/components/logo";
+import { useSnackbar } from "@/app/lib/context/snackbar-context";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);

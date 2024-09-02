@@ -1,5 +1,4 @@
 import {
-  type AuthUser,
   fetchAuthSession,
   fetchUserAttributes,
   getCurrentUser,
@@ -18,8 +17,8 @@ export function useAuthUser() {
         }
 
         const user = {
-            ...(await getCurrentUser()),
-            ...(await fetchUserAttributes()),
+          ...(await getCurrentUser()),
+          ...(await fetchUserAttributes()),
         };
         setUser(user);
       } catch (error) {

@@ -8,10 +8,9 @@ import TextField from "@mui/material/TextField";
 import SignupTimeline from "@/app/components/signup-timeline";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { handleConfirmSignUp } from "@/app/lib/aws/handleConfirmSignUp";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
-import { useSnackbar } from "@/app/components/SnackbarContext";
-import { handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
+import { handleConfirmSignUp, handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
+import { useSnackbar } from "@/app/lib/context/snackbar-context";
 
 const ConfirmSignUp = () => {
   const router = useRouter();

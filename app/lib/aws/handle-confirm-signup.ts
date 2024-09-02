@@ -1,5 +1,5 @@
 import { confirmSignUp } from "aws-amplify/auth/cognito";
-import { handleSignUpStep } from "./signUpUtils";
+import { handleSignUpStep } from "./signup-utils";
 
 // handleConfirmSignUp.ts
 export async function handleConfirmSignUp(username: string, formData: FormData) {

@@ -5,11 +5,11 @@ import convertToSubcurrency from "../../_utils/currency-formatter";
 import CheckoutForm from "../../components/checkout-form";
 import styles from "./payment.module.scss";
 import Button from "@mui/material/Button";
+import Link from "next/link";
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { toTitleCase } from "../../_utils/text-formatter";
-import Link from "next/link";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");

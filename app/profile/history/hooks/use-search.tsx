@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Session } from "../session-interface";
+import { Session } from "@/app/lib/definition";
 
 function useSearch(histories: Session[]) {
   const [searchQuery, setSearchQuery] = useState("");

@@ -2,6 +2,7 @@ import React from "react";
 import styles from "@/app/landing.module.scss";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+
 import { SubscriptionType } from "@/app/lib/definition";
 
 interface SubscriptionSectionProps {

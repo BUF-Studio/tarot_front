@@ -9,7 +9,7 @@ import Logo from "@/public/logo.png";
 import Image from "next/image";
 
 import { toTitleCase } from "@/app/_utils/text-formatter";
-import { Session } from "../session-interface";
+import { Session } from "@/app/lib/definition";
 
 const HistoryCard = ({ session }: { session: Session }) => {
   return (
