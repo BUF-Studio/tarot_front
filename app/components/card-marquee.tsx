@@ -33,19 +33,17 @@ const pictureData = [
   { src: TreeImg, alt: "tree" },
   { src: WineImg, alt: "wine" },
 ];
-
 type MousePosition = {
   x: number;
   y: number;
 };
 
 export default function PictureMarquee() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const inertia = 2;
+  const [mousePos, setMousePos] = useState<MousePosition>({ x: 0, y: 0 });
 
   useEffect(() => {
-    const handleMouseMove = (e: MousePosition) => {
-      setMousePos({ x: e.x / inertia, y: e.y / inertia });
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -75,10 +73,14 @@ interface PictureCardProps {
 }
 
 const PictureCard: React.FC<PictureCardProps> = ({ src, alt, mousePos }) => {
-  const calcTransform = (x: number, y: number): [number, number] => [
-    (x / window.innerWidth - 0.5) * 30,
-    (y / window.innerHeight - 0.5) * 30,
-  ];
+  const calcTransform = (x: number, y: number): [number, number] => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    return [
+      ((x - centerX) / centerX) * 10,
+      ((y - centerY) / centerY) * -10,
+    ];
+  };
 
   const springProps = useSpring({
     transform: `perspective(300px) rotateX(${
