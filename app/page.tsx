@@ -6,12 +6,12 @@ import Link from "next/link";
 import PlanInfoCard from "./components/plan-info-card";
 import SubscriptionSection from "./components/subscription-section";
 import Person from "@mui/icons-material/Person";
+import FeatureIntro from "./components/feature-intro";
 
 import { toTitleCase } from "@/app/_utils/text-formatter";
 import { authenticatedUser } from "./_utils/amplify-server-utils";
 import { User } from "@/app/lib/definition";
 import { redirect } from "next/navigation";
-import FeatureIntro from "./components/feature-intro";
 
 async function getData(userId: string): Promise<User> {
   const res = await fetch(
@@ -31,13 +31,9 @@ async function getData(userId: string): Promise<User> {
 export default async function Home() {
   const user = await authenticatedUser();
 
-  if (!user) {
-    redirect("/signin");
-  }
-
   let userData;
   try {
-    userData = await getData(user.userId);
+    userData = await getData(user?.userId ?? "");
     console.log("User data:", userData);
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -49,7 +45,7 @@ export default async function Home() {
         <section className={styles.welcomeSection}>
           <PictureMarquee />
           <h1 className={`display-medium`}>
-            Welcome {toTitleCase(userData?.name)}!
+            Welcome {userData ? toTitleCase(userData.name) : "to TarotMate"}!
           </h1>
           {userData && (
             <PlanInfoCard
@@ -57,17 +53,15 @@ export default async function Home() {
               subscription_type={userData.subscription_type}
             />
           )}
-          <Stack spacing={1} direction="row">
-            <Link href={"/profile"}>
-              <Button
-                variant="contained"
-                className={styles.button}
-                startIcon={<Person />}
-              >
-                {userData?.name || "Profile"}
-              </Button>
-            </Link>
-          </Stack>
+          <Link href={userData ? "/profile" : "/signin"}>
+            <Button
+              variant="contained"
+              className={styles.button}
+              startIcon={<Person />}
+            >
+              {userData ? userData.name : "Login"}
+            </Button>
+          </Link>
         </section>
       </div>
       <FeatureIntro />

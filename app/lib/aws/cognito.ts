@@ -7,14 +7,11 @@ import {
   signIn,
   signOut,
   resendSignUpCode,
-  autoSignIn,
   getCurrentUser,
   confirmResetPassword,
   resetPassword,
-  type SignUpOutput
 } from "aws-amplify/auth";
 import { SignupSchema } from "@/app/_utils/validation";
-import { redirect } from "next/navigation";
 import { handleSignUpStep } from "./signup-utils";
 
 type AuthResult = {
@@ -52,14 +49,20 @@ export async function handleSignUp(formData: FormData): Promise<AuthResult> {
     if (error instanceof z.ZodError) {
       return { success: false, error: error.errors[0].message };
     }
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "An unexpected error occurred during sign up"
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred during sign up",
     };
   }
 }
 
-export async function handleConfirmSignUp(username: string, formData: FormData): Promise<AuthResult> {
+export async function handleConfirmSignUp(
+  username: string,
+  formData: FormData
+): Promise<AuthResult> {
   try {
     const { nextStep, userId } = await confirmSignUp({
       username,
@@ -69,22 +72,30 @@ export async function handleConfirmSignUp(username: string, formData: FormData):
     return { success: true, message: "Verification successful", userId };
   } catch (error) {
     console.error("Error during confirmation:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "An unexpected error occurred during confirmation"
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred during confirmation",
     };
   }
 }
 
-export async function handleSendEmailVerificationCode(email: string): Promise<AuthResult> {
+export async function handleSendEmailVerificationCode(
+  email: string
+): Promise<AuthResult> {
   try {
     await resendSignUpCode({ username: email });
     return { success: true, message: "Verification code sent" };
   } catch (error) {
     console.error("Error sending verification code:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "An unexpected error occurred while sending verification code"
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred while sending verification code",
     };
   }
 }
@@ -101,9 +112,12 @@ export async function handleSignIn(formData: FormData): Promise<AuthResult> {
     return { success: true, message: "Sign in successful" };
   } catch (error) {
     console.error("Error during sign in:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "An unexpected error occurred during sign in"
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred during sign in",
     };
   }
 }
@@ -126,9 +140,12 @@ export async function handleResetPassword(email: string): Promise<AuthResult> {
     };
   } catch (error) {
     console.error("Error resetting password:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "An unexpected error occurred while resetting password"
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred while resetting password",
     };
   }
 }
@@ -143,9 +160,12 @@ export async function handleConfirmResetPassword(
     return { success: true, message: "Password reset successful" };
   } catch (error) {
     console.error("Error confirming password reset:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "An unexpected error occurred while confirming password reset"
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred while confirming password reset",
     };
   }
 }

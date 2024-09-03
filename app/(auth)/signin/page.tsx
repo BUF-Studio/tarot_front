@@ -38,6 +38,7 @@ const SignIn = () => {
       const { success, message, error } = await handleSignIn(formData);
       if (success && message) {
         showSnackbar(message, "success");
+        router.refresh();
         router.push("/");
       } else {
         showSnackbar(error || "An error occurred during sign in", "error");

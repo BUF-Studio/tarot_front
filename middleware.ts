@@ -15,14 +15,19 @@ const publicRoutes = [
   "/error",
 ];
 
+const protectedRoutes = ["/profile", "/payment", "/payment-success"];
+
 async function checkUserRegistration(userId: string) {
   try {
-    const response = await fetch(`http://${process.env.BACKEND_URL}/user?userId=${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `http://${process.env.BACKEND_URL}/user?userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (response.status === 404) {
       // User not found in the database
@@ -30,13 +35,13 @@ async function checkUserRegistration(userId: string) {
     }
 
     if (!response.ok) {
-      throw new Error('Failed to fetch user data');
+      throw new Error("Failed to fetch user data");
     }
 
     const data = await response.json();
     return data !== null && Object.keys(data).length > 0;
   } catch (error) {
-    console.error('Error checking user registration:', error);
+    console.error("Error checking user registration:", error);
     throw error;
   }
 }
@@ -47,20 +52,25 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   if (user) {
     try {
+      console.log("Checking user registration...");
       const isRegistered = await checkUserRegistration(user.userId);
-      
+
       if (!isRegistered && pathname !== "/profile-info") {
         // User is authenticated but not registered in the backend, redirect to profile info
         return NextResponse.redirect(new URL("/profile-info", request.url));
       }
 
-      // If user is authenticated and tries to access a public route, redirect to home
-      // Exception: Allow access to /profile-info and /signup/verification even if authenticated
-      if (isPublicRoute && !["/profile-info", "/signup/verification"].some(route => pathname.startsWith(route))) {
+      // If user is authenticated and tries to access a login or registration route, redirect to home
+      if (isPublicRoute && pathname !== "/" && pathname !== "/profile-info") {
         return NextResponse.redirect(new URL("/", request.url));
       }
     } catch (error) {
@@ -69,9 +79,15 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/error", request.url));
     }
   } else {
+    console.log("User is not authenticated");
     // If user is not authenticated and tries to access a protected route, redirect to signin
-    if (!isPublicRoute) {
-      return NextResponse.redirect(new URL("/signin", request.url));
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    // Allow access to the landing page and public routes
+    if (pathname === "/" || isPublicRoute) {
+      return response;
     }
   }
 
