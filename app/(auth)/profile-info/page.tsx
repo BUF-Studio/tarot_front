@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styles from "./signup.module.scss";
 import Button from "@mui/material/Button";
 import Link from "next/link";
@@ -16,46 +16,40 @@ import { useRouter } from "next/navigation";
 import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
 import { useSnackbar } from "@/app/lib/context/snackbar-context";
+import { createUser } from "@/app/actions";
 
 const SignUp = () => {
   const router = useRouter();
   const { showSnackbar } = useSnackbar();
   const user = useAuthUser();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    setIsSubmitting(true);
 
-    const userData = {
-      id: user?.userId,
-      email: user?.email,
-      username: formData.get("username"),
-      phone_number: formData.get("phone"),
-      age: formData.get("age"),
-      gender: formData.get("gender"),
-    };
+    const formData = new FormData(e.currentTarget);
+    formData.append("id", user?.userId || "");
+    formData.append("email", user?.email || "");
+
+    const phoneNumber = formData.get('phone_number') as string;
+    formData.set('phone_number', `60${phoneNumber}`);
 
     try {
-      const response = await fetch("/api/create-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      const result = await createUser(formData);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create user");
+      if (result.success) {
+        console.log("User created:", result.user);
+        showSnackbar("Successfully added user", "success");
+        router.push("/");
+      } else {
+        throw new Error(result.error);
       }
-
-      const createdUser = await response.json();
-      console.log("User created:", createdUser);
-      showSnackbar("Successfully added user", "success");
-      router.push("/");
     } catch (error) {
       console.error("Error creating user:", error);
       showSnackbar(getErrorMessage(error), "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,9 +62,9 @@ const SignUp = () => {
             Profile Information
           </h1>
           <p className={`body-large ${styles.subtitle}`}>
-            Tell us abit about yourself
+            Tell us a bit about yourself
           </p>
-          <p>User email {user?.email}</p>
+          <p>User email: {user?.email}</p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
@@ -80,11 +74,12 @@ const SignUp = () => {
             variant="outlined"
             placeholder="Johnny Depp"
             className={styles.input}
+            required
           />
           <TextField
             id="phone"
             label="Phone"
-            name="phone"
+            name="phone_number"
             variant="outlined"
             placeholder="101112222"
             className={styles.input}
@@ -94,11 +89,16 @@ const SignUp = () => {
               ),
             }}
             inputProps={{
-              maxLength: 10, // Max 10 digits after 60
+              maxLength: 10,
             }}
+            required
           />
-          {/* Gender and age */}
-          <FormControl fullWidth variant="outlined" className={styles.input}>
+          <FormControl
+            fullWidth
+            variant="outlined"
+            className={styles.input}
+            required
+          >
             <InputLabel id="gender-label">Gender</InputLabel>
             <Select
               labelId="gender-label"
@@ -123,6 +123,7 @@ const SignUp = () => {
               min: 0,
               max: 120,
             }}
+            required
           />
 
           <div className={styles.buttonGroup}>
@@ -138,8 +139,9 @@ const SignUp = () => {
               variant="contained"
               className={`${styles.button} ${styles.login}`}
               type="submit"
+              disabled={isSubmitting}
             >
-              Create Account
+              {isSubmitting ? "Creating Account..." : "Create Account"}
             </Button>
           </div>
         </form>

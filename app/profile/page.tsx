@@ -14,21 +14,7 @@ import Link from "next/link";
 import { Gender, User } from "@/app/lib/definition";
 import { authenticatedUser } from "../_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
-
-async function getData(userId: string): Promise<User> {
-  const res = await fetch(
-    `http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(
-      userId
-    )}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
+import { getData } from "../actions";
 
 export default async function ProfilePage() {
   const user = await authenticatedUser();

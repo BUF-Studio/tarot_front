@@ -10,30 +10,19 @@ import FeatureIntro from "./components/feature-intro";
 
 import { toTitleCase } from "@/app/_utils/text-formatter";
 import { authenticatedUser } from "./_utils/amplify-server-utils";
-import { User } from "@/app/lib/definition";
+import { getData } from "./actions";
 import { redirect } from "next/navigation";
-
-async function getData(userId: string): Promise<User> {
-  const res = await fetch(
-    `http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(
-      userId
-    )}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
 
 export default async function Home() {
   const user = await authenticatedUser();
 
+  if (!user) {
+    redirect("/signin");
+  }
+  
   let userData;
   try {
-    userData = await getData(user?.userId ?? "");
+    userData = await getData(user.userId);
     console.log("User data:", userData);
   } catch (error) {
     console.error("Error fetching user data:", error);

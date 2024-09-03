@@ -1,8 +1,11 @@
+"use client"
+
 import React from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import BackButton from "../components/back-button";
 import Logo from "../components/logo";
+import { SnackbarProvider } from "../lib/context/snackbar-context";
 
 export default function ProfileLayout({
   children,
@@ -22,7 +25,7 @@ export default function ProfileLayout({
         <Logo />
         <BackButton />
       </Stack>
-      {children}
+      <SnackbarProvider>{children}</SnackbarProvider>
     </Box>
   );
 }
