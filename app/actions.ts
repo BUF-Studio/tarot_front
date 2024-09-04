@@ -1,6 +1,6 @@
 "use server";
 
-import { Gender, Model, User } from "@/app/lib/definition";
+import type { Gender, Model, User } from "@/app/lib/definition";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -90,7 +90,7 @@ export async function updateProfile(formData: FormData) {
           id: userId,
           username,
           phone_number,
-          age: parseInt(age),
+          age: Number.parseInt(age),
           gender,
         }),
       }
@@ -121,7 +121,7 @@ export async function createUser(formData: FormData) {
       name: formData.get("username") as string,
       email: formData.get("email") as string,
       phone_number: formData.get("phone_number") as string,
-      age: parseInt(formData.get("age") as string),
+      age: Number.parseInt(formData.get("age") as string),
       gender: formData.get("gender") as Gender,
     };
 
