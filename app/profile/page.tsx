@@ -16,6 +16,8 @@ import { authenticatedUser } from "../_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
 import { getData } from "../actions";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProfilePage() {
   const user = await authenticatedUser();
 

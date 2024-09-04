@@ -12,6 +12,9 @@ import { toTitleCase } from "@/app/_utils/text-formatter";
 import { authenticatedUser } from "./_utils/amplify-server-utils";
 import { getData } from "./actions";
 import { redirect } from "next/navigation";
+import type { User } from "./lib/definition";
+
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const user = await authenticatedUser();
@@ -19,8 +22,8 @@ export default async function Home() {
   if (!user) {
     redirect("/signin");
   }
-  
-  let userData;
+
+  let userData: User | null = null;
   try {
     userData = await getData(user.userId);
     console.log("User data:", userData);
@@ -33,7 +36,7 @@ export default async function Home() {
       <div className={styles.main}>
         <section className={styles.welcomeSection}>
           <PictureMarquee />
-          <h1 className={`display-medium`}>
+          <h1 className={"display-medium"}>
             Welcome {userData ? toTitleCase(userData.name) : "to TarotMate"}!
           </h1>
           {userData && (

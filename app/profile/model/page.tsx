@@ -5,6 +5,8 @@ import ModelPage from "./components/model-page";
 import { getData } from "@/app/actions";
 import { Suspense } from "react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ModelPageWrapper() {
   const user = await authenticatedUser();
   if (!user) {

@@ -8,7 +8,10 @@ const withAutoCert = autoCert({
 
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['@aws-amplify/adapter-nextjs', 'aws-amplify'],
+    serverComponentsExternalPackages: [
+      "@aws-amplify/adapter-nextjs",
+      "aws-amplify",
+    ],
   },
 };
 
