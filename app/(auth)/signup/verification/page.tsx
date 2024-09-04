@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type FormEvent, useState, useEffect } from "react";
+import React, { type FormEvent, useState, useEffect, Suspense } from "react";
 import styles from "./confirmSignUp.module.scss";
 import Button from "@mui/material/Button";
 import Logo from "@/app/components/logo";
@@ -12,7 +12,7 @@ import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { handleConfirmSignUp, handleSendEmailVerificationCode } from "@/app/lib/aws/cognito";
 import { useSnackbar } from "@/app/lib/context/snackbar-context";
 
-const ConfirmSignUp = () => {
+const ConfirmSignUpContent = () => {
   const router = useRouter();
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
@@ -131,6 +131,14 @@ const ConfirmSignUp = () => {
         </form>
       </div>
     </div>
+  );
+};
+
+const ConfirmSignUp = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmSignUpContent />
+    </Suspense>
   );
 };
 

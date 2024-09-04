@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -9,7 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputAdornment from "@mui/material/InputAdornment";
-import { User, Gender } from "@/app/lib/definition";
+import { type User, Gender } from "@/app/lib/definition";
 import { useSnackbar } from "@/app/lib/context/snackbar-context";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "@/app/actions";
@@ -26,39 +27,40 @@ export default function UpdateProfileForm({
   const [isUpdating, setIsUpdating] = useState(false);
   const { showSnackbar } = useSnackbar();
   const [phoneNumber, setPhoneNumber] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
-    // Remove the '60' prefix if it exists
     setPhoneNumber(initialUserData.phone_number.replace(/^60/, ""));
   }, [initialUserData.phone_number]);
 
   const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    // Only allow digits and limit to 10 characters (2 for country code + 8 for number)
     setPhoneNumber(value.replace(/\D/g, "").slice(0, 10));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsUpdating(true);
     const formData = new FormData(event.currentTarget);
 
-    // Ensure the phone number always starts with '60'
     const fullPhoneNumber = phoneNumber.startsWith('60') ? phoneNumber : `60${phoneNumber}`;
-    formData.set('phone', fullPhoneNumber);
+    formData.set('phone_number', fullPhoneNumber);
 
     try {
       const result = await updateProfile(formData);
       if (result.success) {
         showSnackbar('Profile updated successfully', 'success');
+        router.push('/profile'); // Redirect to profile page after successful update
       } else {
-        throw new Error(result.error);
+        throw new Error(result.error || 'Failed to update profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
       showSnackbar(error instanceof Error ? error.message : 'Failed to update profile', 'error');
+    } finally {
+      setIsUpdating(false);
     }
   };
-
 
   return (
     <Container maxWidth="sm" component="form" onSubmit={handleSubmit}>
@@ -72,6 +74,7 @@ export default function UpdateProfileForm({
         defaultValue={initialUserData.name}
         fullWidth
         margin="normal"
+        required
       />
       <TextField
         id="phone"
@@ -82,11 +85,12 @@ export default function UpdateProfileForm({
         onChange={handlePhoneChange}
         fullWidth
         margin="normal"
+        required
         InputProps={{
           startAdornment: <InputAdornment position="start">60</InputAdornment>,
         }}
       />
-      <FormControl fullWidth margin="normal">
+      <FormControl fullWidth margin="normal" required>
         <InputLabel id="gender-label">Gender</InputLabel>
         <Select
           labelId="gender-label"
@@ -109,6 +113,7 @@ export default function UpdateProfileForm({
         defaultValue={initialUserData.age}
         fullWidth
         margin="normal"
+        required
         inputProps={{
           min: 0,
           max: 120,

@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import type React from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import BackButton from "../components/back-button";

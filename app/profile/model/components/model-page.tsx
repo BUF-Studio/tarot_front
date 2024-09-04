@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -8,7 +9,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import { Model, User } from "@/app/lib/definition";
+import { Model, type User } from "@/app/lib/definition";
 import { useSnackbar } from "@/app/lib/context/snackbar-context";
 import { updateModel } from "@/app/actions";
 
