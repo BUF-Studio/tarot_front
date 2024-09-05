@@ -23,7 +23,7 @@ export default async function Home() {
     redirect("/signin");
   }
 
-  let userData: User | null = null;
+  let userData: User | undefined;
   try {
     userData = await getData(user.userId);
     console.log("User data:", userData);

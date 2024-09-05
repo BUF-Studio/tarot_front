@@ -5,7 +5,6 @@ import "@/app/globals.scss";
 import "@/app/lib/theme/font.css";
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import { UserContextProvider } from "./lib/context/user-provider";
 
 export const metadata: Metadata = {
   title: "Tarotmate",
@@ -22,9 +21,7 @@ export default function RootLayout({
       <body>
         <ConfigureAmplifyClientSide />
         <ThemeRegistry>
-          <UserContextProvider>
-            <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
-          </UserContextProvider>
+          <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
         </ThemeRegistry>
       </body>
     </html>

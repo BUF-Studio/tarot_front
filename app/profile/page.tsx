@@ -11,7 +11,7 @@ import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import LogoutButton from "./components/logout-button";
 import Link from "next/link";
 
-import { Gender, User } from "@/app/lib/definition";
+import { Gender, type User } from "@/app/lib/definition";
 import { authenticatedUser } from "../_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
 import { getData } from "../actions";
@@ -25,7 +25,7 @@ export default async function ProfilePage() {
     redirect("/signin");
   }
 
-  let userData;
+  let userData: User | undefined;
   try {
     userData = await getData(user.userId);
     console.log("User data:", userData);
@@ -52,7 +52,7 @@ export default async function ProfilePage() {
           <Chip
             color="primary"
             icon={
-              userData?.gender == Gender.Female ? (
+              userData?.gender === Gender.Female ? (
                 <FemaleRoundedIcon />
               ) : (
                 <MaleRoundedIcon />
