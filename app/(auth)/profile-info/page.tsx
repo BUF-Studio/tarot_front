@@ -17,6 +17,7 @@ import { getErrorMessage } from "@/app/_utils/get-error-message";
 import { useAuthUser } from "@/app/_hooks/use-auth-user";
 import { useSnackbar } from "@/app/lib/context/snackbar-context";
 import { createUser } from "@/app/actions";
+import { handleSignOut } from "@/app/lib/aws/cognito";
 
 const SignUp = () => {
   const router = useRouter();
@@ -50,6 +51,15 @@ const SignUp = () => {
       showSnackbar(getErrorMessage(error), "error");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await handleSignOut();
+      router.refresh();
+    } catch (error) {
+      console.error("Error signing out: ", error);
     }
   };
 
@@ -126,13 +136,8 @@ const SignUp = () => {
           />
 
           <div className={styles.buttonGroup}>
-            <Button variant="text" className={styles.button}>
-              <Link
-                href="/signup/account-setup"
-                style={{ textDecoration: "none" }}
-              >
-                Back
-              </Link>
+            <Button variant="text" className={styles.button} onClick={handleLogout}>
+                Log out
             </Button>
             <Button
               variant="contained"
