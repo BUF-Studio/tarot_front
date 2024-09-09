@@ -8,10 +8,16 @@ import {
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
+import { useAuthUser } from "../_hooks/use-auth-user";
+import { updateUserSubscription } from "../actions";
+import { SubscriptionType } from "../lib/definition";
 
 const CheckoutForm = ({ amount, plan }: { amount: number, plan: string }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const user = useAuthUser();
+
+  console.log(user?.userId);
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -41,6 +47,10 @@ const CheckoutForm = ({ amount, plan }: { amount: number, plan: string }) => {
       return;
     }
 
+    if (!user?.userId) {
+      return;
+    }
+
     const { error: submitError } = await elements.submit();
 
     if (submitError) {
@@ -59,6 +69,10 @@ const CheckoutForm = ({ amount, plan }: { amount: number, plan: string }) => {
 
     if (error) {
       setError(error.message ?? null);
+    }
+
+    if (!error) {
+      await updateUserSubscription(user?.userId, plan as SubscriptionType, 1);
     }
 
     setLoading(false);

@@ -121,7 +121,6 @@ export async function handleSignIn(formData: FormData): Promise<AuthResult> {
     };
   }
 }
-
 export async function handleSignOut(): Promise<void> {
   try {
     await signOut();

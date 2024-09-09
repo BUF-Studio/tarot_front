@@ -30,7 +30,7 @@ const SignUp = () => {
 
     const formData = new FormData(e.currentTarget);
     formData.append("id", user?.userId || "");
-    formData.append("email", user?.email || "");
+    formData.append("email", user?.username || "");
 
     const phoneNumber = formData.get('phone_number') as string;
     formData.set('phone_number', `60${phoneNumber}`);
@@ -64,7 +64,6 @@ const SignUp = () => {
           <p className={`body-large ${styles.subtitle}`}>
             Tell us a bit about yourself
           </p>
-          <p>User email: {user?.email}</p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField

@@ -1,6 +1,11 @@
 "use server";
 
-import type { Gender, Model, User } from "@/app/lib/definition";
+import type {
+  Gender,
+  Model,
+  SubscriptionType,
+  User,
+} from "@/app/lib/definition";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -70,9 +75,15 @@ export async function updateModel(formData: FormData) {
 export async function updateProfile(formData: FormData) {
   const userId = formData.get("userId") as string;
   const username = formData.get("username") as string;
-  const phone_number = formData.get("phone") as string;
+  const phone_number = formData.get("phone_number") as string;
   const age = formData.get("age") as string;
   const gender = formData.get("gender") as Gender;
+
+  console.log(`User Id: ${userId}`);
+  console.log(`Username: ${username}`);
+  console.log(`Phone Number: ${phone_number}`);
+  console.log(`Age: ${age}`);
+  console.log(`Gender: ${gender}`);
 
   if (!userId || !username || !phone_number || !age || !gender) {
     throw new Error("Invalid form data");
@@ -167,6 +178,65 @@ export async function createUser(formData: FormData) {
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to create user",
+    };
+  }
+}
+
+/**
+ * Update the user's subscription plan.
+ * @param userId
+ * @param planId
+ * @param duration
+ * @returns
+ * @throws An error if the form data is invalid or the update fails
+ */
+
+export async function updateUserSubscription(
+  userId: string,
+  plan: SubscriptionType,
+  durationMonths: number
+) {
+  try {
+    // Validate input
+    if (!userId || !plan || !durationMonths) {
+      throw new Error("Missing required parameters");
+    }
+
+    if (plan !== "free" && plan !== "premium") {
+      throw new Error('Invalid plan type. Must be "free" or "premium".');
+    }
+
+    // Make a POST request to your backend API
+    const response = await fetch(
+      `${process.env.API_URL}/updateUserSubscription`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userId,
+          plan: plan,
+          duration: durationMonths,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update subscription");
+    }
+
+    // Revalidate the user's profile page or any other relevant pages
+    revalidatePath(`/profile/${userId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating subscription:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
     };
   }
 }

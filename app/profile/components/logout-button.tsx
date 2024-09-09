@@ -5,8 +5,8 @@ import ButtonBase from "@mui/material/ButtonBase";
 import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import Typography from "@mui/material/Typography";
 
-import { useRouter } from "next/navigation";
-import { handleSignOut } from "../../lib/aws/cognito";
+import { redirect, useRouter } from "next/navigation";
+import { handleSignOut } from "@/app/lib/aws/cognito";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -14,6 +14,7 @@ export default function LogoutButton() {
   const handleLogout = async () => {
     try {
       await handleSignOut();
+      router.refresh();
     } catch (error) {
       console.error("Error signing out: ", error);
     }
