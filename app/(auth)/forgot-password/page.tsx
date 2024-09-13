@@ -342,11 +342,11 @@ const ForgotPassword = () => {
             <ValidationItem valid={validations.match} text="Passwords match" />
           </List>
           <div className={styles.buttonGroup}>
-            <Button variant="text" className={styles.button}>
-              <Link href="/signin" style={{ textDecoration: "none" }}>
+            <Link href="/signin" style={{ textDecoration: "none" }}>
+              <Button variant="text" className={styles.button}>
                 Back
-              </Link>
-            </Button>
+              </Button>
+            </Link>
             <Button
               variant="contained"
               className={`${styles.button} ${styles.login}`}

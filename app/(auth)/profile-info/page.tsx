@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import styles from "./signup.module.scss";
 import Button from "@mui/material/Button";
-import Link from "next/link";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";

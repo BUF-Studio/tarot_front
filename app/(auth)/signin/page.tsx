@@ -103,11 +103,11 @@ const SignIn = () => {
             Forgot password?
           </Link>
           <div className={styles.buttonGroup}>
-            <Button variant="text" className={styles.button}>
-              <Link href="/signup" style={{ textDecoration: "none" }}>
+            <Link href="/signup" style={{ textDecoration: "none" }}>
+              <Button variant="text" className={styles.button}>
                 Create Account
-              </Link>
-            </Button>
+              </Button>
+            </Link>
             <Button
               variant="contained"
               className={`${styles.button} ${styles.login}`}
