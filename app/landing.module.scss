@@ -1,0 +1,327 @@
+.main {
+  display: flex;
+  min-height: 100vh;
+  background-image: url("../public/background.png");
+  background-repeat: repeat;
+  background-size: 32rem;
+  align-items: center;
+  padding: 2rem 0;
+
+  @media (min-width: 768px) {
+    padding: 4rem 0;
+  }
+
+  .welcomeSection {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+
+    .contactInfo {
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+      }
+
+      span {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+
+        @media (min-width: 768px) {
+          margin-bottom: 0;
+        }
+
+        .icon {
+          margin-right: 0.5rem;
+        }
+
+        &:last-child {
+          @media (min-width: 768px) {
+            margin-left: 2rem;
+          }
+        }
+      }
+    }
+    .planInfoContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+
+      .planInfo {
+        margin-top: 2.5rem;
+        width: 100%;
+        background-color: var(--color-surface-container);
+        padding: 1.5rem;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+
+        @media (min-width: 768px) {
+          width: 100%;
+          max-width: 49.5rem;
+          padding: 2.5rem;
+          flex-direction: row;
+        }
+
+        .planDetails {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-bottom: 1rem;
+
+          @media (min-width: 768px) {
+            align-items: flex-start;
+            margin-bottom: 0;
+          }
+
+          .plan {
+            font-weight: 700;
+          }
+
+          span {
+            text-align: center;
+
+            @media (min-width: 768px) {
+              text-align: left;
+            }
+          }
+        }
+
+        .progressBar {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          @media (min-width: 768px) {
+            margin-left: 2rem;
+          }
+
+          .textRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+
+    .button {
+      margin-top: 1rem;
+      align-self: center;
+      border-radius: 100px;
+      box-shadow: none;
+      text-transform: capitalize;
+
+      @media (min-width: 768px) {
+        align-self: flex-end;
+      }
+    }
+
+    .logout {
+      margin-top: 1rem;
+      text-transform: capitalize;
+      text-decoration: none;
+      border-radius: 100px;
+      opacity: 0.8;
+
+      Link {
+        text-decoration: none;
+        color: var(--color-primary);
+      }
+    }
+  }
+}
+
+.featureSection {
+  text-align: center;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+
+  .featureContainer {
+    display: flex;
+    margin: 2rem 0;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      margin-top: 2rem;
+      flex-direction: column;
+    }
+
+    .feature {
+      background-color: var(--color-surface-container);
+      padding: 2rem 1rem;
+      border-radius: 1rem;
+      text-align: center;
+      max-width: 320px;
+
+      h3 {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+.tarotMateSection {
+  background-color: var(--color-on-primary-container);
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+
+  .tarotMateTitle {
+    color: var(--color-surface);
+  }
+
+  .tarotMateSubtitle {
+    color: var(--color-surface);
+    margin-top: 1rem;
+  }
+}
+
+.plansContainer {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 100%;
+  gap: 1.5rem;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  background-color: var(--color-secondary-container);
+
+  @media (min-width: 768px) {
+    margin-top: 4rem;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 40rem;
+    padding: 1.5rem;
+  }
+
+  .planCard {
+    background-color: var(--color-surface-container-lowest);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s cubic-bezier(0.3, 0, 0.8, 0.15);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s cubic-bezier(0.05, 0.7, 0.1, 1);
+    }
+
+    .planTitle {
+      margin-top: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .planDesc {
+      margin-bottom: 1.5rem;
+    }
+
+    .planFeatures {
+      flex: 1;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      list-style: none;
+      padding-left: 1rem;
+
+      li {
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .planPrice {
+      font-weight: bold;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+
+    .planButton {
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      border-radius: 200px;
+      width: fit-content;
+      align-self: center;
+      box-shadow: none;
+      text-transform: capitalize;
+    }
+  }
+}
+
+.pictureCard {
+  width: 30vh;
+  margin: 2rem 0;
+  perspective: 1000px;
+  // overflow: hidden;
+
+  .animated {
+    will-change: transform;
+    transition: transform 0.1s;
+  }
+}
+
+.modalContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-surface-container);
+  width: 90%;
+  max-width: 30rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+
+  .buttonGroup {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1rem;
+
+    .planButton {
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      border-radius: 200px;
+      width: fit-content;
+      align-self: center;
+      box-shadow: none;
+      text-transform: capitalize;
+    }
+  }
+}
