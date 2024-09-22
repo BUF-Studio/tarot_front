@@ -1,7 +1,6 @@
-'use client'
+"use client";
 
-import type React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -21,7 +20,7 @@ interface ModelPageProps {
 export default function ModelPage({ initialUserData, userId }: ModelPageProps) {
   const [userData, setUserData] = useState(initialUserData);
   const [isUpdating, setIsUpdating] = useState(false);
-  const {showSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbar();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,9 +31,9 @@ export default function ModelPage({ initialUserData, userId }: ModelPageProps) {
 
     if (result.success) {
       setUserData({ ...userData, model: formData.get("model-group") as Model });
-      showSnackbar('Model updated successfully', 'success');
+      showSnackbar("Model updated successfully", "success");
     } else {
-      showSnackbar(result.error || 'Failed to update model', 'error');
+      showSnackbar(result.error || "Failed to update model", "error");
     }
 
     setIsUpdating(false);
@@ -80,7 +79,7 @@ export default function ModelPage({ initialUserData, userId }: ModelPageProps) {
             borderRadius: 16,
           }}
         >
-          {isUpdating ? 'Updating...' : 'Update'}
+          {isUpdating ? "Updating..." : "Update"}
         </Button>
       </FormControl>
     </Container>

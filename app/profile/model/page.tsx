@@ -1,7 +1,7 @@
+import ModelPage from "./components/model-page";
 import { authenticatedUser } from "@/app/_utils/amplify-server-utils";
 import type { User } from "@/app/lib/definition";
 import { redirect } from "next/navigation";
-import ModelPage from "./components/model-page";
 import { getData } from "@/app/actions";
 import { Suspense } from "react";
 
