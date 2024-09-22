@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getData } from "@/app/actions";
 import { Suspense } from "react";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function ModelPageWrapper() {
   const user = await authenticatedUser();
@@ -13,11 +13,9 @@ export default async function ModelPageWrapper() {
     redirect("/signin");
   }
 
-  let userData: User;
-  try {
-    userData = await getData(user.userId);
-  } catch (error) {
-    console.error("Error fetching user data:", error);
+  let userData: User | undefined = await getData(user.userId);
+
+  if (!userData) {
     return <div>Error loading user data</div>;
   }
 

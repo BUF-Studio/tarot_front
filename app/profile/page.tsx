@@ -16,7 +16,7 @@ import { authenticatedUser } from "../_utils/amplify-server-utils";
 import { redirect } from "next/navigation";
 import { getData } from "../actions";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
   const user = await authenticatedUser();
@@ -25,12 +25,11 @@ export default async function ProfilePage() {
     redirect("/signin");
   }
 
-  let userData: User | undefined;
-  try {
-    userData = await getData(user.userId);
-    console.log("User data:", userData);
-  } catch (error) {
-    console.error("Error fetching user data:", error);
+  let userData: User | undefined = await getData(user.userId);
+
+  if (!userData) {
+    console.error("Error fetching user data");
+    return <div>Error loading user data</div>;
   }
 
   return (

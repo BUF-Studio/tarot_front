@@ -13,7 +13,11 @@ import { revalidatePath } from "next/cache";
  * @param userId - The id of the user to fetch data for
  * @returns A promise that resolves to the user's data
  */
-export async function getData(userId: string): Promise<User> {
+export async function getData(userId: string): Promise<User | undefined> {
+  if (userId == "") {
+    return undefined;
+  }
+
   const res = await fetch(
     `http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(
       userId
