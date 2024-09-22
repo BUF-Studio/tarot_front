@@ -1,35 +1,22 @@
 import styles from "@/app/landing.module.scss";
 import Button from "@mui/material/Button";
-import PictureMarquee from "@/app/components/card-marquee";
-import Stack from "@mui/material/Stack";
 import Link from "next/link";
-import PlanInfoCard from "./components/plan-info-card";
-import SubscriptionSection from "./components/subscription-section";
 import Person from "@mui/icons-material/Person";
-import FeatureIntro from "./components/feature-intro";
+import PictureMarquee from "@/app/components/card-marquee";
+import PlanInfoCard from "@/app/components/plan-info-card";
+import FeatureIntro from "@/app/components/feature-intro";
+import SubscriptionSection from "@/app/components/subscription-section";
 
 import { toTitleCase } from "@/app/_utils/text-formatter";
 import { authenticatedUser } from "./_utils/amplify-server-utils";
 import { getData } from "./actions";
-import { redirect } from "next/navigation";
 import type { User } from "./lib/definition";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const user = await authenticatedUser();
-
-  if (!user) {
-    redirect("/signin");
-  }
-
-  let userData: User | undefined;
-  try {
-    userData = await getData(user.userId);
-    console.log("User data:", userData);
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
+  let userData: User | undefined = await getData(user?.userId ?? "");
 
   return (
     <>
