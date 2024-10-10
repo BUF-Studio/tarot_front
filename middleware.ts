@@ -19,7 +19,7 @@ const protectedRoutes = ["/profile", "/payment", "/payment-success"];
 
 async function checkUserRegistration(userId: string) {
   const url = `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/user?userId=${userId}`;
-  console.log("URL is ", url);
+  // console.log("URL is ", url);
   try {
     const response = await fetch(url, {
       method: "GET",

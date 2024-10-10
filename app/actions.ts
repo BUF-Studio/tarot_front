@@ -138,7 +138,7 @@ export async function createUser(formData: FormData) {
       phone_number: formData.get("phone_number") as string,
       age: Number.parseInt(formData.get("age") as string),
       gender: formData.get("gender") as Gender,
-      model: Model.Llama31,
+      model: Model.GPT4OMini,
     };
 
     // Validate the userData
