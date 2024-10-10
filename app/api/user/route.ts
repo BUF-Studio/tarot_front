@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const response = await fetch(
-      `http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(userId)}`,
+      `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(userId)}`,
       {
         method: "GET",
         headers: {

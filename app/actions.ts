@@ -19,9 +19,9 @@ export async function getData(userId: string): Promise<User | undefined> {
   }
 
   const res = await fetch(
-    `http://${process.env.BACKEND_URL}/user?userId=${encodeURIComponent(
-      userId
-    )}`,
+    `${process.env.PROTOCOL}://${
+      process.env.BACKEND_URL
+    }/user?userId=${encodeURIComponent(userId)}`,
     { cache: "no-store" }
   );
 
@@ -48,7 +48,7 @@ export async function updateModel(formData: FormData) {
 
   try {
     const response = await fetch(
-      `http://${process.env.BACKEND_URL}/updateUserModel`,
+      `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/updateUserModel`,
       {
         method: "POST",
         headers: {
@@ -95,7 +95,7 @@ export async function updateProfile(formData: FormData) {
 
   try {
     const response = await fetch(
-      `http://${process.env.BACKEND_URL}/updateUser`,
+      `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/updateUser`,
       {
         method: "POST",
         headers: {
@@ -149,6 +149,8 @@ export async function createUser(formData: FormData) {
       "age",
       "gender",
     ];
+
+    console.log("user data is ", userData);
     for (const field of requiredFields) {
       if (
         !(field in userData) ||
@@ -160,7 +162,7 @@ export async function createUser(formData: FormData) {
     }
 
     const response = await fetch(
-      `http://${process.env.BACKEND_URL}/createUser`,
+      `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/createUser`,
       {
         method: "POST",
         headers: {

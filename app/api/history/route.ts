@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const response = await fetch(
-      `http://${process.env.BACKEND_URL}/userSessions?user_id=${id}`,
+      `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/userSessions?user_id=${id}`,
       {
         headers: {
           "content-type": "application/json",

@@ -22,7 +22,7 @@ export default async function History({
   }
 
   const response = await fetch(
-    `http://${process.env.BACKEND_URL}/userSessions?user_id=${encodeURIComponent(
+    `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/userSessions?user_id=${encodeURIComponent(
       user.userId
     )}`,
     { cache: "force-cache" }

@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(userData);
+    console.log("User data is " ,userData);
 
-    const response = await fetch(`http://${process.env.BACKEND_URL}/createUser`, {
+    const response = await fetch(`${process.env.PROTOCOL}://${process.env.BACKEND_URL}/createUser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

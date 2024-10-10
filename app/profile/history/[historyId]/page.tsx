@@ -15,7 +15,7 @@ export default async function HistoryDetails({
   const id = params.historyId;
 
   const response = await fetch(
-    `http://${process.env.BACKEND_URL}/userSessions/${id}`
+    `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/userSessions/${id}`
   );
 
   if (!response.ok) {

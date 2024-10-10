@@ -18,16 +18,15 @@ const publicRoutes = [
 const protectedRoutes = ["/profile", "/payment", "/payment-success"];
 
 async function checkUserRegistration(userId: string) {
+  const url = `${process.env.PROTOCOL}://${process.env.BACKEND_URL}/user?userId=${userId}`;
+  console.log("URL is ", url);
   try {
-    const response = await fetch(
-      `http://${process.env.BACKEND_URL}/user?userId=${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (response.status === 404) {
       // User not found in the database
@@ -81,9 +80,9 @@ export async function middleware(request: NextRequest) {
   } else {
     console.log("User is not authenticated");
     // If user is not authenticated and tries to access a protected route, redirect to signin
-    if (isProtectedRoute) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
+    // if (isProtectedRoute) {
+    //   return NextResponse.redirect(new URL("/", request.url));
+    // }
 
     // Allow access to the landing page and public routes
     if (pathname === "/" || isPublicRoute) {
