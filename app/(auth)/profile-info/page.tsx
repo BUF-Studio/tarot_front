@@ -30,7 +30,7 @@ const SignUp = () => {
 
     const formData = new FormData(e.currentTarget);
     formData.append("id", user?.userId || "");
-    formData.append("email", user?.username || "");
+    formData.append("email", user?.attributes.email || "");
 
     const phoneNumber = formData.get('phone_number') as string;
     formData.set('phone_number', `60${phoneNumber}`);
